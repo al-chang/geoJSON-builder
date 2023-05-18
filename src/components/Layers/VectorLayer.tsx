@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import OLVectorLayer from "ol/layer/Vector";
-import { useMapContext } from "../../hooks/useMap";
 import VectorSource from "ol/source/Vector";
 import { Geometry } from "ol/geom";
 import { Style } from "ol/style";
 import { Modify, Snap } from "ol/interaction";
 import { GeoJSON } from "ol/format";
+import { useMapContext } from "../../contexts/Map/useMapContext";
 
 type VectorLayerProps = {
   source: VectorSource<Geometry>;

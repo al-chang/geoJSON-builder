@@ -1,9 +1,9 @@
 import React from "react";
-import { useMapContext } from "../hooks/useMap";
 import { fromLonLat } from "ol/proj";
 import { SearchResponse } from "../types";
-import { useBuilderContext } from "../hooks/useBuilder";
 import { dimensionsFromBoundingBox } from "../util";
+import { useBuilderContext } from "../contexts/Builder/useBuilderContext";
+import { useMapContext } from "../contexts/Map/useMapContext";
 
 type SearchResultProps = {
   result: SearchResponse;

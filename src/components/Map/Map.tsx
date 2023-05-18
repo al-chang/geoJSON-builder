@@ -7,12 +7,12 @@ import TileLayer from "../Layers/TileLayer";
 import Controls from "../Controls/Controls";
 import FullScreenControl from "../Controls/FullScreenControl";
 import { osm, vector } from "../../util";
-import { useMapContext } from "../../hooks/useMap";
 import { Circle as CircleStyle, Fill, Stroke, Style } from "ol/style";
 import VectorLayer from "../Layers/VectorLayer";
-import { useBuilderContext } from "../../hooks/useBuilder";
 import { GeoJSONType } from "../../types";
 import styled from "styled-components";
+import { useBuilderContext } from "../../contexts/Builder/useBuilderContext";
+import { useMapContext } from "../../contexts/Map/useMapContext";
 
 const MapContainer = styled.div`
   width: 100%;
