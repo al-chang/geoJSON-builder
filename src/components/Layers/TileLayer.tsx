@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import { useMapContext } from "../../hooks/useMap";
 import OLTileLayer from "ol/layer/Tile";
 import TileSource from "ol/source/Tile";
+import { useMapContext } from "../../contexts/Map/useMapContext";
 
 type TileLayerProps = {
   source: TileSource;

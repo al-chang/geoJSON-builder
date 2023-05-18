@@ -1,8 +1,8 @@
 import SearchJson from "./components/SearchJson";
-import { BuilderProvider } from "./hooks/useBuilder";
-import { MapProvider } from "./hooks/useMap";
 import Map from "./components/Map/Map";
 import styled from "styled-components";
+import { BuilderProvider } from "./contexts/Builder/builderProvider";
+import { MapProvider } from "./contexts/Map/mapProvider";
 
 export const Content = styled.div`
   display: flex;

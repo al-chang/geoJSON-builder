@@ -1,23 +1,7 @@
-import React, {
-  PropsWithChildren,
-  createContext,
-  useContext,
-  useState,
-} from "react";
-import { FeatureCollection, SearchResponse } from "../types";
-import { searchResponseToFeature } from "../util";
-
-type TBuilderContext = {
-  featureCollection: FeatureCollection;
-  addFeature: (searchResponse: SearchResponse) => void;
-  removeFeature: (place_id: number) => void;
-};
-
-const BuilderContext = createContext<TBuilderContext>(null!);
-
-export const useBuilderContext = () => {
-  return useContext(BuilderContext);
-};
+import { PropsWithChildren, useState } from "react";
+import { FeatureCollection, SearchResponse } from "../../types";
+import { searchResponseToFeature } from "../../util";
+import { BuilderContext } from "./useBuilderContext";
 
 export const BuilderProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [featureCollection, setFeatureCollection] = useState<FeatureCollection>(
