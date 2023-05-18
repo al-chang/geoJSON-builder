@@ -1,32 +1,56 @@
-import SearchJson from "./components/SearchJson";
 import Map from "./components/Map/Map";
 import styled from "styled-components";
 import { BuilderProvider } from "./contexts/Builder/builderProvider";
 import { MapProvider } from "./contexts/Map/mapProvider";
+import SearchJson from "./components/Search/Search";
+import SideBarSwitch from "./components/SideBarSwitch";
+import { useState } from "react";
+import Builder from "./components/Builder/Builder";
 
-export const Content = styled.div`
+const Content = styled.div`
   display: flex;
   width: 100vw;
 `;
-const LeftContainer = styled.div`
+const SideBarContainer = styled.div`
   width: 33%;
 `;
-const RightContainer = styled.div`
+const MapContainer = styled.div`
   width: 67%;
   height: 100vh;
+  position: sticky;
+  top: 0;
 `;
 
+export enum SideBarContent {
+  Search = "SEARCH",
+  Builder = "BUILDER",
+}
+
 const App = () => {
+  const [sideBarContent, setSideBarContent] = useState<SideBarContent>(
+    SideBarContent.Search
+  );
+
+  const sideBar = () => {
+    switch (sideBarContent) {
+      case SideBarContent.Search:
+        return <SearchJson />;
+      case SideBarContent.Builder:
+        return <Builder />;
+    }
+  };
+
   return (
     <Content>
       <MapProvider>
         <BuilderProvider>
-          <LeftContainer>
-            <SearchJson />
-          </LeftContainer>
-          <RightContainer>
+          <SideBarContainer>
+            <SideBarSwitch switcher={setSideBarContent} />
+            {sideBar()}
+          </SideBarContainer>
+          <MapContainer>
             <Map />
-          </RightContainer>
+          </MapContainer>
         </BuilderProvider>
       </MapProvider>
     </Content>
