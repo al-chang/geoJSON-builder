@@ -1,12 +1,12 @@
-export type Feature = {
-  geometry: GeoJSON;
+export type TFeature = {
+  geometry: TGeoJSON;
   type: "Feature";
   properties: Record<string, string | number>;
 };
 
-export type FeatureCollection = {
+export type TFeatureCollection = {
   type: "FeatureCollection";
-  features: Feature[];
+  features: TFeature[];
 };
 
 export enum GeoJSONType {
@@ -15,12 +15,12 @@ export enum GeoJSONType {
   Polygon = "Polygon",
 }
 
-export type GeoJSON = {
+export type TGeoJSON = {
   type: GeoJSONType;
   coordinates: number[][][];
 };
 
-export type SearchResponse = {
+export type TSearchResponse = {
   place_id: number;
   licence: string;
   osm_type: string;
@@ -34,5 +34,5 @@ export type SearchResponse = {
   type: string;
   importance: number;
   icon: string;
-  geojson: GeoJSON;
+  geojson: TGeoJSON;
 };

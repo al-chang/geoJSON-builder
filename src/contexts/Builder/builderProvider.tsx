@@ -1,14 +1,13 @@
 import { PropsWithChildren, useState } from "react";
-import { FeatureCollection, SearchResponse } from "../../types";
+import { TFeatureCollection, TSearchResponse } from "../../types";
 import { searchResponseToFeature } from "../../util";
 import { BuilderContext } from "./useBuilderContext";
 
 export const BuilderProvider: React.FC<PropsWithChildren> = ({ children }) => {
-  const [featureCollection, setFeatureCollection] = useState<FeatureCollection>(
-    { type: "FeatureCollection", features: [] }
-  );
+  const [featureCollection, setFeatureCollection] =
+    useState<TFeatureCollection>({ type: "FeatureCollection", features: [] });
 
-  const addFeature = (searchResponse: SearchResponse) => {
+  const addFeature = (searchResponse: TSearchResponse) => {
     if (
       featureCollection.features.some(
         (f) => f.properties.place_id === searchResponse.place_id
@@ -32,9 +31,26 @@ export const BuilderProvider: React.FC<PropsWithChildren> = ({ children }) => {
     });
   };
 
+  const exportFeatureCollection = () => {
+    const dataStr =
+      "data:text/json;charset=utf-8," +
+      encodeURIComponent(JSON.stringify(featureCollection));
+    const downloadAnchorNode = document.createElement("a");
+    downloadAnchorNode.setAttribute("href", dataStr);
+    downloadAnchorNode.setAttribute("download", `features.geojson`);
+    document.body.appendChild(downloadAnchorNode);
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+  };
+
   return (
     <BuilderContext.Provider
-      value={{ featureCollection, addFeature, removeFeature }}
+      value={{
+        featureCollection,
+        addFeature,
+        removeFeature,
+        exportFeatureCollection,
+      }}
     >
       {children}
     </BuilderContext.Provider>

@@ -1,12 +1,27 @@
 import React from "react";
 import { fromLonLat } from "ol/proj";
-import { SearchResponse } from "../types";
-import { dimensionsFromBoundingBox } from "../util";
-import { useBuilderContext } from "../contexts/Builder/useBuilderContext";
-import { useMapContext } from "../contexts/Map/useMapContext";
+import { TSearchResponse } from "../../types";
+import { useBuilderContext } from "../../contexts/Builder/useBuilderContext";
+import { useMapContext } from "../../contexts/Map/useMapContext";
+import { dimensionsFromBoundingBox } from "../../util";
+import styled from "styled-components";
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: row;
+  border: 1px solid white;
+  margin: 5px;
+`;
+
+const DisplayName = styled.h3`
+  margin: 5px;
+  padding: 0;
+  font-size: normal;
+  font-weight: normal;
+`;
 
 type SearchResultProps = {
-  result: SearchResponse;
+  result: TSearchResponse;
 };
 
 const SearchResult: React.FC<SearchResultProps> = ({ result }) => {
@@ -14,8 +29,8 @@ const SearchResult: React.FC<SearchResultProps> = ({ result }) => {
   const { addFeature } = useBuilderContext();
 
   return (
-    <div className="m-2 p-2 border-solid border-gray-500 border-2">
-      <h3>{result.display_name}</h3>
+    <Container>
+      <DisplayName>{result.display_name}</DisplayName>
       <button
         type="button"
         onClick={() => {
@@ -41,7 +56,7 @@ const SearchResult: React.FC<SearchResultProps> = ({ result }) => {
       >
         Add
       </button>
-    </div>
+    </Container>
   );
 };
 

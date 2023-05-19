@@ -63,6 +63,8 @@ const Map: React.FC = () => {
 
   // Initialize map on first render
   useEffect(() => {
+    if (!mapRef.current) return;
+
     const options = {
       view: new View({ zoom, center }),
       layers: [],
@@ -71,7 +73,7 @@ const Map: React.FC = () => {
     };
 
     const mapObject = new olMap(options);
-    mapObject.setTarget(mapRef.current!);
+    mapObject.setTarget(mapRef.current);
     setMap(mapObject);
 
     return () => mapObject.setTarget(undefined);
@@ -93,13 +95,13 @@ const Map: React.FC = () => {
             key={feature.properties.place_id}
             source={vector(feature.geometry)}
             style={styles[feature.geometry.type]}
+            editable
           />
         ))}
         {previewGeoJson && (
           <VectorLayer
             source={vector(previewGeoJson)}
             style={previewStyles[previewGeoJson.type]}
-            editable
           />
         )}
       </Layers>
