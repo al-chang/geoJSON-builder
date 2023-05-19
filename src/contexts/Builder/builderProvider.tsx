@@ -2,10 +2,14 @@ import { PropsWithChildren, useState } from "react";
 import { TFeatureCollection, TSearchResponse } from "../../types";
 import { searchResponseToFeature } from "../../util";
 import { BuilderContext } from "./useBuilderContext";
+import { useMapContext } from "../Map/useMapContext";
 
 export const BuilderProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [featureCollection, setFeatureCollection] =
     useState<TFeatureCollection>({ type: "FeatureCollection", features: [] });
+  const [editMode, setEditMode] = useState<boolean>(false);
+
+  const { map } = useMapContext();
 
   const addFeature = (searchResponse: TSearchResponse) => {
     if (
@@ -16,19 +20,30 @@ export const BuilderProvider: React.FC<PropsWithChildren> = ({ children }) => {
       return;
 
     const newFeature = searchResponseToFeature(searchResponse);
-    setFeatureCollection({
-      ...featureCollection,
-      features: [...featureCollection.features, newFeature],
-    });
+    setFeatureCollection((_featureCollection) => ({
+      ..._featureCollection,
+      features: [..._featureCollection.features, newFeature],
+    }));
   };
 
   const removeFeature = (place_id: number) => {
-    setFeatureCollection({
-      ...featureCollection,
-      features: featureCollection.features.filter(
+    setFeatureCollection((_featureCollection) => ({
+      ..._featureCollection,
+      features: _featureCollection.features.filter(
         (f) => f.properties.place_id !== place_id
       ),
-    });
+    }));
+  };
+
+  const toggleFeatureVisibility = (place_id: number) => {
+    setFeatureCollection((_featureCollection) => ({
+      ..._featureCollection,
+      features: _featureCollection.features.map((f) =>
+        f.properties.place_id === place_id
+          ? { ...f, meta: { ...f.meta, visible: !f.meta.visible } }
+          : f
+      ),
+    }));
   };
 
   const exportFeatureCollection = () => {
@@ -43,6 +58,12 @@ export const BuilderProvider: React.FC<PropsWithChildren> = ({ children }) => {
     downloadAnchorNode.remove();
   };
 
+  const saveEdits = () => {
+    map?.getLayers().forEach((layer) => {
+      console.log(layer.getRevision());
+    });
+  };
+
   return (
     <BuilderContext.Provider
       value={{
@@ -50,6 +71,10 @@ export const BuilderProvider: React.FC<PropsWithChildren> = ({ children }) => {
         addFeature,
         removeFeature,
         exportFeatureCollection,
+        editMode,
+        setEditMode,
+        saveEdits,
+        toggleFeatureVisibility,
       }}
     >
       {children}

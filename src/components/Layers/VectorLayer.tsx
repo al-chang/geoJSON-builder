@@ -12,6 +12,7 @@ type VectorLayerProps = {
   style: Style;
   zIndex?: number;
   editable?: boolean;
+  visible?: boolean;
 };
 
 const VectorLayer: React.FC<VectorLayerProps> = ({
@@ -19,6 +20,7 @@ const VectorLayer: React.FC<VectorLayerProps> = ({
   style,
   zIndex = 0,
   editable = false,
+  visible = true,
 }) => {
   const { map } = useMapContext();
 
@@ -27,12 +29,13 @@ const VectorLayer: React.FC<VectorLayerProps> = ({
     const vectorLayer = new OLVectorLayer({ source, style });
     map.addLayer(vectorLayer);
     vectorLayer.setZIndex(zIndex);
+    vectorLayer.setVisible(visible);
     return () => {
       if (map) {
         map.removeLayer(vectorLayer);
       }
     };
-  }, [map, source, style, zIndex]);
+  }, [map, source, style, zIndex, visible]);
 
   // Add draw interaction
   useEffect(() => {

@@ -3,8 +3,12 @@ import { TFeatureCollection, TSearchResponse } from "../../types";
 
 type TBuilderContext = {
   featureCollection: TFeatureCollection;
+  editMode: boolean;
+  setEditMode: (editMode: boolean) => void;
+  saveEdits: () => void;
   addFeature: (searchResponse: TSearchResponse) => void;
   removeFeature: (place_id: number) => void;
+  toggleFeatureVisibility: (place_id: number) => void;
   exportFeatureCollection: () => void;
 };
 
