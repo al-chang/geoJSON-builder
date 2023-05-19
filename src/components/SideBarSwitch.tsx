@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { SideBarContent } from "../App";
+import { useBuilderContext } from "../contexts/Builder/useBuilderContext";
 
 const Options = styled.ul`
   list-style: none;
@@ -14,6 +15,8 @@ export type SideBarSwitchProps = {
 };
 
 const SideBarSwitch: React.FC<SideBarSwitchProps> = ({ switcher }) => {
+  const { exportFeatureCollection } = useBuilderContext();
+
   return (
     <nav>
       <Options>
@@ -26,6 +29,9 @@ const SideBarSwitch: React.FC<SideBarSwitchProps> = ({ switcher }) => {
           <button onClick={() => switcher(SideBarContent.Builder)}>
             Modify
           </button>
+        </li>
+        <li>
+          <button onClick={exportFeatureCollection}>Export</button>
         </li>
       </Options>
     </nav>

@@ -1,12 +1,12 @@
 import OSM from "ol/source/OSM";
 import VectorSource from "ol/source/Vector";
 import { GeoJSON as GeoJSONFormat } from "ol/format";
-import { Feature, GeoJSON, SearchResponse } from "./types";
+import { TFeature, TGeoJSON, TSearchResponse } from "./types";
 import { get } from "ol/proj";
 
 export const osm = new OSM();
 
-export const vector = (geoJSON: GeoJSON) => {
+export const vector = (geoJSON: TGeoJSON) => {
   return new VectorSource({
     features: new GeoJSONFormat().readFeatures(geoJSON, {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -16,8 +16,8 @@ export const vector = (geoJSON: GeoJSON) => {
 };
 
 export const searchResponseToFeature = (
-  searchResponse: SearchResponse
-): Feature => {
+  searchResponse: TSearchResponse
+): TFeature => {
   return {
     geometry: searchResponse.geojson,
     type: "Feature",
@@ -37,4 +37,12 @@ export const dimensionsFromBoundingBox = (boundingBox: number[]) => {
 export const areaFromBoundingBox = (boundingBox: number[]) => {
   const [minX, minY, maxX, maxY] = boundingBox;
   return Math.abs(maxX - minX) * Math.abs(maxY - minY);
+};
+
+export const GeoJSONCenter = (geoJSON: TGeoJSON) => {
+  const maxX = Math.max(...geoJSON.coordinates[0].map((c) => c[0]));
+  const minX = Math.min(...geoJSON.coordinates[0].map((c) => c[0]));
+  const maxY = Math.max(...geoJSON.coordinates[0].map((c) => c[1]));
+  const minY = Math.min(...geoJSON.coordinates[0].map((c) => c[1]));
+  return [(maxX + minX) / 2, (maxY + minY) / 2];
 };

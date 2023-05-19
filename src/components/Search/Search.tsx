@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { searchGeoJson } from "../../service/searchService";
 import SearchResult from "./SearchResult";
-import { SearchResponse } from "../../types";
+import { TSearchResponse } from "../../types";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -27,7 +27,7 @@ const SearchButton = styled.button`
 
 const SearchJson: React.FC = () => {
   const [term, setTerm] = useState<string>("");
-  const [searchResults, setSearchResults] = useState<SearchResponse[]>([]);
+  const [searchResults, setSearchResults] = useState<TSearchResponse[]>([]);
 
   return (
     <Container>

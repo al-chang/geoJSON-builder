@@ -1,6 +1,6 @@
 import React from "react";
 import { fromLonLat } from "ol/proj";
-import { SearchResponse } from "../../types";
+import { TSearchResponse } from "../../types";
 import { useBuilderContext } from "../../contexts/Builder/useBuilderContext";
 import { useMapContext } from "../../contexts/Map/useMapContext";
 import { dimensionsFromBoundingBox } from "../../util";
@@ -21,7 +21,7 @@ const DisplayName = styled.h3`
 `;
 
 type SearchResultProps = {
-  result: SearchResponse;
+  result: TSearchResponse;
 };
 
 const SearchResult: React.FC<SearchResultProps> = ({ result }) => {

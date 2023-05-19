@@ -95,6 +95,7 @@ const Map: React.FC = () => {
             key={feature.properties.place_id}
             source={vector(feature.geometry)}
             style={styles[feature.geometry.type]}
+            editable
           />
         ))}
         {previewGeoJson && (
