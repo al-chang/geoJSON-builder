@@ -37,7 +37,7 @@ export const BuilderProvider: React.FC<PropsWithChildren> = ({ children }) => {
       encodeURIComponent(JSON.stringify(featureCollection));
     const downloadAnchorNode = document.createElement("a");
     downloadAnchorNode.setAttribute("href", dataStr);
-    downloadAnchorNode.setAttribute("download", `features.json`);
+    downloadAnchorNode.setAttribute("download", `features.geojson`);
     document.body.appendChild(downloadAnchorNode);
     downloadAnchorNode.click();
     downloadAnchorNode.remove();
