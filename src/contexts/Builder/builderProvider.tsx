@@ -1,59 +1,73 @@
-import { PropsWithChildren, useState } from "react";
-import { TFeatureCollection, TSearchResponse } from "../../types";
+import { PropsWithChildren, useReducer, useState } from "react";
+import { TFeatureCollection } from "../../types";
 import { searchResponseToFeature } from "../../util";
-import { BuilderContext } from "./useBuilderContext";
-import { useMapContext } from "../Map/useMapContext";
-import Vector from "ol/layer/Vector";
-import GeoJSON from "ol/format/GeoJSON";
+import { BuilderContext, FeatureCollectionActions } from "./useBuilderContext";
+
+const featureCollectionReducer = (
+  state: TFeatureCollection,
+  action: FeatureCollectionActions
+): TFeatureCollection => {
+  switch (action.type) {
+    case "addFeature":
+      return {
+        ...state,
+        features: [...state.features, searchResponseToFeature(action.payload)],
+      };
+    case "removeFeature":
+      return {
+        ...state,
+        features: state.features.filter(
+          (f) => f.properties.meta.uuid !== action.payload
+        ),
+      };
+    case "toggleFeatureVisibility":
+      return {
+        ...state,
+        features: state.features.map((f) =>
+          f.properties.meta.uuid === action.payload
+            ? {
+                ...f,
+                properties: {
+                  ...f.properties,
+                  meta: {
+                    ...f.properties.meta,
+                    visible: !f.properties.meta.visible,
+                  },
+                },
+              }
+            : f
+        ),
+      };
+    case "saveEdits":
+      return {
+        ...state,
+        features: state.features.map((f) => ({
+          type: "Feature",
+          geometry:
+            action.payload.find(
+              (feature) =>
+                feature.properties.meta.uuid === f.properties.meta.uuid
+            )?.geometry || f.geometry,
+          properties: {
+            ...f.properties,
+            meta: { ...f.properties.meta, visible: true },
+          },
+        })),
+      };
+    default:
+      return state;
+  }
+};
 
 export const BuilderProvider: React.FC<PropsWithChildren> = ({ children }) => {
-  const [featureCollection, setFeatureCollection] =
-    useState<TFeatureCollection>({ type: "FeatureCollection", features: [] });
+  const [featureCollection, dispatchFeatureCollection] = useReducer(
+    featureCollectionReducer,
+    {
+      type: "FeatureCollection",
+      features: [],
+    }
+  );
   const [editMode, setEditMode] = useState<boolean>(false);
-
-  const { map } = useMapContext();
-
-  const addFeature = (searchResponse: TSearchResponse) => {
-    if (
-      featureCollection.features.some(
-        (f) => f.properties.place_id === searchResponse.place_id
-      )
-    )
-      return;
-
-    const newFeature = searchResponseToFeature(searchResponse);
-    setFeatureCollection((_featureCollection) => ({
-      ..._featureCollection,
-      features: [..._featureCollection.features, newFeature],
-    }));
-  };
-
-  const removeFeature = (id: string) => {
-    setFeatureCollection((_featureCollection) => ({
-      ..._featureCollection,
-      features: _featureCollection.features.filter(
-        (f) => f.properties.meta.uuid !== id
-      ),
-    }));
-  };
-
-  const toggleFeatureVisibility = (id: string) => {
-    console.log(id);
-    setFeatureCollection((_featureCollection) => ({
-      ..._featureCollection,
-      features: _featureCollection.features.map((f) =>
-        f.properties.meta.uuid === id
-          ? {
-              ...f,
-              meta: {
-                ...f.properties.meta,
-                visible: !f.properties.meta.visible,
-              },
-            }
-          : f
-      ),
-    }));
-  };
 
   const exportFeatureCollection = () => {
     const _featureCollection = {
@@ -74,53 +88,14 @@ export const BuilderProvider: React.FC<PropsWithChildren> = ({ children }) => {
     downloadAnchorNode.remove();
   };
 
-  const saveEdits = () => {
-    const geoJson = new GeoJSON();
-    const _featureCollection: TFeatureCollection = {
-      type: "FeatureCollection",
-      features: [],
-    };
-    map
-      ?.getLayers()
-      .getArray()
-      .forEach((layer) => {
-        if (layer instanceof Vector) {
-          const features = geoJson.writeFeaturesObject(
-            layer.getSource().getFeatures(),
-            {
-              featureProjection: "EPSG:3857",
-            }
-          ) as TFeatureCollection;
-          features.features.forEach((feature) => {
-            _featureCollection.features.push(feature);
-          });
-        }
-      });
-    // Map meta variables to correct type
-    _featureCollection.features = _featureCollection.features.map((f) => ({
-      ...f,
-      properties: {
-        ...f.properties,
-        meta: {
-          uuid: f.properties.meta.uuid,
-          visible: f.properties.meta.visible.toString() === "true",
-        },
-      },
-    }));
-    setFeatureCollection(_featureCollection);
-  };
-
   return (
     <BuilderContext.Provider
       value={{
         featureCollection,
-        addFeature,
-        removeFeature,
+        dispatchFeatureCollection,
         exportFeatureCollection,
         editMode,
         setEditMode,
-        saveEdits,
-        toggleFeatureVisibility,
       }}
     >
       {children}

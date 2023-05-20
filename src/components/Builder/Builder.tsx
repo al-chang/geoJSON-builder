@@ -1,6 +1,10 @@
 import styled from "styled-components";
 import { useBuilderContext } from "../../contexts/Builder/useBuilderContext";
 import Feature from "./Feature";
+import { useMapContext } from "../../contexts/Map/useMapContext";
+import Vector from "ol/layer/Vector";
+import { GeoJSON } from "ol/format";
+import { TFeature, TFeatureCollection } from "../../types";
 
 const Header = styled.div`
   display: flex;
@@ -9,8 +13,13 @@ const Header = styled.div`
 `;
 
 const Builder: React.FC = () => {
-  const { editMode, featureCollection, setEditMode, saveEdits } =
-    useBuilderContext();
+  const {
+    editMode,
+    featureCollection,
+    setEditMode,
+    dispatchFeatureCollection,
+  } = useBuilderContext();
+  const { map } = useMapContext();
 
   return (
     <>
@@ -19,7 +28,25 @@ const Builder: React.FC = () => {
           <>
             <button
               onClick={() => {
-                saveEdits();
+                const features: TFeature[] = [];
+                map
+                  ?.getLayers()
+                  .getArray()
+                  .forEach((layer) => {
+                    if (layer instanceof Vector) {
+                      const _features = new GeoJSON().writeFeaturesObject(
+                        layer.getSource().getFeatures(),
+                        { featureProjection: "EPSG:3857" }
+                      ) as TFeatureCollection;
+                      _features.features.forEach((feature) => {
+                        features.push(feature);
+                      });
+                    }
+                  });
+                dispatchFeatureCollection({
+                  type: "saveEdits",
+                  payload: features,
+                });
                 setEditMode(false);
               }}
             >

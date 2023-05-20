@@ -33,7 +33,7 @@ type FeatureProps = {
 
 const Feature: React.FC<FeatureProps> = ({ feature }) => {
   const { setCenter } = useMapContext();
-  const { removeFeature, toggleFeatureVisibility } = useBuilderContext();
+  const { dispatchFeatureCollection } = useBuilderContext();
 
   const goToCenter = () => {
     const center = GeoJSONCenter(feature.geometry);
@@ -41,11 +41,17 @@ const Feature: React.FC<FeatureProps> = ({ feature }) => {
   };
 
   const deleteFeature = () => {
-    removeFeature(feature.properties.meta.uuid);
+    dispatchFeatureCollection({
+      type: "removeFeature",
+      payload: feature.properties.meta.uuid,
+    });
   };
 
   const toggleVisibility = () => {
-    toggleFeatureVisibility(feature.properties.meta.uuid);
+    dispatchFeatureCollection({
+      type: "toggleFeatureVisibility",
+      payload: feature.properties.meta.uuid,
+    });
   };
 
   return (
