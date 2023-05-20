@@ -1,10 +1,50 @@
+type TCoordinate = [number, number];
+
+type TPoint = {
+  type: "Point";
+  coordinates: TCoordinate;
+};
+
+type TMultiPoint = {
+  type: "MultiPoint";
+  coordinates: TCoordinate[];
+};
+
+type TLineString = {
+  type: "LineString";
+  coordinates: TCoordinate[];
+};
+
+type TMultiLineString = {
+  type: "MultiLineString";
+  coordinates: TCoordinate[][];
+};
+
+type TPolygon = {
+  type: "Polygon";
+  coordinates: TCoordinate[][];
+};
+
+type TMultiPolygon = {
+  type: "MultiPolygon";
+  coordinates: TCoordinate[][][];
+};
+
+export type TGeometry =
+  | TPoint
+  | TMultiPoint
+  | TLineString
+  | TMultiLineString
+  | TPolygon
+  | TMultiPolygon;
+
 export type TMetaProperties = {
   visible: boolean;
   uuid: string;
 };
 
 export type TFeature = {
-  geometry: TGeoJSON;
+  geometry: TGeometry;
   type: "Feature";
   properties: Record<string, unknown> & {
     meta: TMetaProperties;
@@ -14,17 +54,6 @@ export type TFeature = {
 export type TFeatureCollection = {
   type: "FeatureCollection";
   features: TFeature[];
-};
-
-export enum GeoJSONType {
-  Point = "Point",
-  MultiPolygon = "MultiPolygon",
-  Polygon = "Polygon",
-}
-
-export type TGeoJSON = {
-  type: GeoJSONType;
-  coordinates: number[][][];
 };
 
 export type TSearchResponse = {
@@ -41,5 +70,5 @@ export type TSearchResponse = {
   type: string;
   importance: number;
   icon: string;
-  geojson: TGeoJSON;
+  geojson: TGeometry;
 };
