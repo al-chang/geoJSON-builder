@@ -21,7 +21,7 @@ const MapContainer = styled.div`
 
 const style = (
   geometryType: TGeometryType,
-  { red, green, blue } = { red: 255, green: 0, blue: 0 }
+  { red, green, blue } = { red: 0, green: 0, blue: 255 }
 ): Style => {
   switch (geometryType) {
     case "Point":
@@ -128,7 +128,7 @@ const Map: React.FC = () => {
         {previewGeoJson && (
           <VectorLayer
             source={vector(previewGeoJson)}
-            style={style(previewGeoJson.type, { red: 0, green: 0, blue: 255 })}
+            style={style(previewGeoJson.type, { red: 255, green: 0, blue: 0 })}
           />
         )}
       </Layers>
