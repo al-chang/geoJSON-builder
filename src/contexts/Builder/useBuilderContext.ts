@@ -2,7 +2,7 @@ import { createContext, useContext } from "react";
 import { TFeatureCollection, TSearchResponse } from "../../types";
 
 type TBuilderContext = {
-  featureCollection: TFeatureCollection;
+  featureCollection: Readonly<TFeatureCollection>;
   editMode: boolean;
   setEditMode: (editMode: boolean) => void;
   saveEdits: () => void;

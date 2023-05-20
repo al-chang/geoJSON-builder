@@ -36,6 +36,10 @@ const VectorLayer: React.FC<VectorLayerProps> = ({
     };
   }, [map, source, style, zIndex, visible]);
 
+  useEffect(() => {
+    console.log(visible);
+  }, [visible]);
+
   // Add draw interaction
   useEffect(() => {
     if (!editable || !map || !source) return;

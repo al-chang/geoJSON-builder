@@ -53,7 +53,6 @@ const Feature: React.FC<FeatureProps> = ({ feature }) => {
       <h3>{feature.properties.name as string}</h3>
       <Actions>
         <ActionButton onClick={goToCenter}>
-          =
           <Locate onClick={goToCenter} />
         </ActionButton>
         <ActionButton onClick={toggleVisibility}>

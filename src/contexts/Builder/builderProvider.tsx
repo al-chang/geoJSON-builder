@@ -5,7 +5,6 @@ import { BuilderContext } from "./useBuilderContext";
 import { useMapContext } from "../Map/useMapContext";
 import Vector from "ol/layer/Vector";
 import GeoJSON from "ol/format/GeoJSON";
-import proj4 from "proj4";
 
 export const BuilderProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [featureCollection, setFeatureCollection] =
@@ -39,6 +38,7 @@ export const BuilderProvider: React.FC<PropsWithChildren> = ({ children }) => {
   };
 
   const toggleFeatureVisibility = (id: string) => {
+    console.log(id);
     setFeatureCollection((_featureCollection) => ({
       ..._featureCollection,
       features: _featureCollection.features.map((f) =>
@@ -96,6 +96,17 @@ export const BuilderProvider: React.FC<PropsWithChildren> = ({ children }) => {
           });
         }
       });
+    // Map meta variables to correct type
+    _featureCollection.features = _featureCollection.features.map((f) => ({
+      ...f,
+      properties: {
+        ...f.properties,
+        meta: {
+          uuid: f.properties.meta.uuid,
+          visible: f.properties.meta.visible.toString() === "true",
+        },
+      },
+    }));
     setFeatureCollection(_featureCollection);
   };
 
