@@ -32,10 +32,10 @@ export const searchResponseToFeature = (
       name: searchResponse.display_name,
       place_id: searchResponse.place_id,
       osm_id: searchResponse.osm_id,
-    },
-    meta: {
-      visible: true,
-      uuid: crypto.randomUUID(),
+      meta: {
+        visible: true,
+        uuid: crypto.randomUUID(),
+      },
     },
   };
 };

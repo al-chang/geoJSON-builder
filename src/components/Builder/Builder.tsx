@@ -20,10 +20,11 @@ const Builder: React.FC = () => {
             <button
               onClick={() => {
                 saveEdits();
+                setEditMode(false);
               }}
             >
               Save
-            </button>{" "}
+            </button>
             <button
               onClick={() => {
                 setEditMode(false);
@@ -37,7 +38,10 @@ const Builder: React.FC = () => {
         )}
       </Header>
       {featureCollection.features.map((feature) => (
-        <Feature key={feature.properties.place_id} feature={feature} />
+        <Feature
+          key={feature.properties.place_id as string}
+          feature={feature}
+        />
       ))}
     </>
   );

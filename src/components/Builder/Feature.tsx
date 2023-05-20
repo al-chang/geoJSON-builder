@@ -41,22 +41,23 @@ const Feature: React.FC<FeatureProps> = ({ feature }) => {
   };
 
   const deleteFeature = () => {
-    removeFeature(feature.meta.uuid);
+    removeFeature(feature.properties.meta.uuid);
   };
 
   const toggleVisibility = () => {
-    toggleFeatureVisibility(feature.meta.uuid);
+    toggleFeatureVisibility(feature.properties.meta.uuid);
   };
 
   return (
     <Container>
-      <h3>{feature.properties.name}</h3>
+      <h3>{feature.properties.name as string}</h3>
       <Actions>
         <ActionButton onClick={goToCenter}>
+          =
           <Locate onClick={goToCenter} />
         </ActionButton>
         <ActionButton onClick={toggleVisibility}>
-          {feature.meta.visible ? <Hide /> : <Show />}
+          {feature.properties.meta.visible ? <Hide /> : <Show />}
         </ActionButton>
         <ActionButton>
           <Edit />

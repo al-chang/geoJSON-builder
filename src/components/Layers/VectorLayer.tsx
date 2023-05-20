@@ -4,7 +4,6 @@ import VectorSource from "ol/source/Vector";
 import { Geometry } from "ol/geom";
 import { Style } from "ol/style";
 import { Modify, Snap } from "ol/interaction";
-import { GeoJSON } from "ol/format";
 import { useMapContext } from "../../contexts/Map/useMapContext";
 
 type VectorLayerProps = {
@@ -44,15 +43,9 @@ const VectorLayer: React.FC<VectorLayerProps> = ({
     const snap = new Snap({ source: source });
     map.addInteraction(snap);
     map.addInteraction(modify);
-    const updateGeoJson = () => {
-      console.log(source.getFeatures());
-      console.log(new GeoJSON().writeFeatures(source.getFeatures()));
-    };
-    modify.on("modifyend", updateGeoJson);
 
     return () => {
       if (map) {
-        modify.un("modifyend", updateGeoJson);
         map.removeInteraction(modify);
         map.removeInteraction(snap);
       }

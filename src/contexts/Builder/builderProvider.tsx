@@ -5,6 +5,7 @@ import { BuilderContext } from "./useBuilderContext";
 import { useMapContext } from "../Map/useMapContext";
 import Vector from "ol/layer/Vector";
 import GeoJSON from "ol/format/GeoJSON";
+import proj4 from "proj4";
 
 export const BuilderProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [featureCollection, setFeatureCollection] =
@@ -31,7 +32,9 @@ export const BuilderProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const removeFeature = (id: string) => {
     setFeatureCollection((_featureCollection) => ({
       ..._featureCollection,
-      features: _featureCollection.features.filter((f) => f.meta.uuid !== id),
+      features: _featureCollection.features.filter(
+        (f) => f.properties.meta.uuid !== id
+      ),
     }));
   };
 
@@ -39,8 +42,14 @@ export const BuilderProvider: React.FC<PropsWithChildren> = ({ children }) => {
     setFeatureCollection((_featureCollection) => ({
       ..._featureCollection,
       features: _featureCollection.features.map((f) =>
-        f.meta.uuid === id
-          ? { ...f, meta: { ...f.meta, visible: !f.meta.visible } }
+        f.properties.meta.uuid === id
+          ? {
+              ...f,
+              meta: {
+                ...f.properties.meta,
+                visible: !f.properties.meta.visible,
+              },
+            }
           : f
       ),
     }));
@@ -67,17 +76,27 @@ export const BuilderProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
   const saveEdits = () => {
     const geoJson = new GeoJSON();
+    const _featureCollection: TFeatureCollection = {
+      type: "FeatureCollection",
+      features: [],
+    };
     map
       ?.getLayers()
       .getArray()
       .forEach((layer) => {
         if (layer instanceof Vector) {
-          const features = layer.getSource().getFeatures();
-          const featureCollection = geoJson.writeFeaturesObject(
-            features
+          const features = geoJson.writeFeaturesObject(
+            layer.getSource().getFeatures(),
+            {
+              featureProjection: "EPSG:3857",
+            }
           ) as TFeatureCollection;
+          features.features.forEach((feature) => {
+            _featureCollection.features.push(feature);
+          });
         }
       });
+    setFeatureCollection(_featureCollection);
   };
 
   return (

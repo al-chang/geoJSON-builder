@@ -92,11 +92,11 @@ const Map: React.FC = () => {
         <TileLayer source={osm} zIndex={0} />
         {featureCollection.features.map((feature) => (
           <VectorLayer
-            key={feature.properties.place_id}
+            key={feature.properties.place_id as string}
             source={vector(feature)}
             style={styles[feature.geometry.type]}
             editable={editMode}
-            visible={feature.meta.visible}
+            visible={feature.properties.meta.visible}
           />
         ))}
         {previewGeoJson && (

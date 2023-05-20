@@ -6,8 +6,9 @@ export type TMetaProperties = {
 export type TFeature = {
   geometry: TGeoJSON;
   type: "Feature";
-  properties: Record<string, string | number>;
-  meta: TMetaProperties;
+  properties: Record<string, unknown> & {
+    meta: TMetaProperties;
+  };
 };
 
 export type TFeatureCollection = {
