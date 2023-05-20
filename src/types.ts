@@ -38,6 +38,8 @@ export type TGeometry =
   | TPolygon
   | TMultiPolygon;
 
+export type TGeometryType = TGeometry["type"];
+
 export type TMetaProperties = {
   visible: boolean;
   uuid: string;
