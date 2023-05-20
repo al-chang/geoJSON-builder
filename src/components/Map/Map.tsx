@@ -59,7 +59,7 @@ const previewStyles: Record<GeoJSONType, Style> = {
 const Map: React.FC = () => {
   const mapRef = useRef<HTMLDivElement>(null);
   const { map, setMap, previewGeoJson, center, zoom } = useMapContext();
-  const { featureCollection } = useBuilderContext();
+  const { featureCollection, editMode } = useBuilderContext();
 
   // Initialize map on first render
   useEffect(() => {
@@ -92,10 +92,11 @@ const Map: React.FC = () => {
         <TileLayer source={osm} zIndex={0} />
         {featureCollection.features.map((feature) => (
           <VectorLayer
-            key={feature.properties.place_id}
-            source={vector(feature.geometry)}
+            key={feature.properties.place_id as string}
+            source={vector(feature)}
             style={styles[feature.geometry.type]}
-            editable
+            editable={editMode}
+            visible={feature.properties.meta.visible}
           />
         ))}
         {previewGeoJson && (

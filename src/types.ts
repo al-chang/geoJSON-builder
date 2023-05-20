@@ -1,7 +1,14 @@
+export type TMetaProperties = {
+  visible: boolean;
+  uuid: string;
+};
+
 export type TFeature = {
   geometry: TGeoJSON;
   type: "Feature";
-  properties: Record<string, string | number>;
+  properties: Record<string, unknown> & {
+    meta: TMetaProperties;
+  };
 };
 
 export type TFeatureCollection = {

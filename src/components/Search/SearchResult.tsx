@@ -26,7 +26,7 @@ type SearchResultProps = {
 
 const SearchResult: React.FC<SearchResultProps> = ({ result }) => {
   const { setPreviewGeoJson, setCenter, setZoom } = useMapContext();
-  const { addFeature } = useBuilderContext();
+  const { dispatchFeatureCollection } = useBuilderContext();
 
   return (
     <Container>
@@ -50,7 +50,7 @@ const SearchResult: React.FC<SearchResultProps> = ({ result }) => {
       <button
         type="button"
         onClick={() => {
-          addFeature(result);
+          dispatchFeatureCollection({ type: "addFeature", payload: result });
           setPreviewGeoJson(null);
         }}
       >

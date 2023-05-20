@@ -45,7 +45,10 @@ const App = () => {
       <MapProvider>
         <BuilderProvider>
           <SideBarContainer>
-            <SideBarSwitch switcher={setSideBarContent} />
+            <SideBarSwitch
+              currentTab={sideBarContent}
+              switcher={setSideBarContent}
+            />
             {sideBar()}
           </SideBarContainer>
           <MapContainer>
