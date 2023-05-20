@@ -1,15 +1,15 @@
 import { createContext, useContext } from "react";
 import Map from "ol/Map";
 import { Coordinate } from "ol/coordinate";
-import { TGeoJSON } from "../../types";
+import { TGeometry } from "../../types";
 
 type TMapContext = {
   map: Map | null;
-  previewGeoJson: TGeoJSON | null;
+  previewGeoJson: TGeometry | null;
   center: Coordinate;
   zoom: number;
   setMap: (map: Map | null) => void;
-  setPreviewGeoJson: (geoJson: TGeoJSON | null) => void;
+  setPreviewGeoJson: (geoJson: TGeometry | null) => void;
   setCenter: (center: Coordinate) => void;
   setZoom: (zoom: number) => void;
 };
