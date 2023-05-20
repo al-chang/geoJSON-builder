@@ -41,11 +41,11 @@ const Feature: React.FC<FeatureProps> = ({ feature }) => {
   };
 
   const deleteFeature = () => {
-    removeFeature(feature.properties.place_id as number);
+    removeFeature(feature.meta.uuid);
   };
 
   const toggleVisibility = () => {
-    toggleFeatureVisibility(feature.properties.place_id as number);
+    toggleFeatureVisibility(feature.meta.uuid);
   };
 
   return (

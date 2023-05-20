@@ -35,6 +35,7 @@ export const searchResponseToFeature = (
     },
     meta: {
       visible: true,
+      uuid: crypto.randomUUID(),
     },
   };
 };

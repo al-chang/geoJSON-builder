@@ -3,6 +3,8 @@ import { TFeatureCollection, TSearchResponse } from "../../types";
 import { searchResponseToFeature } from "../../util";
 import { BuilderContext } from "./useBuilderContext";
 import { useMapContext } from "../Map/useMapContext";
+import Vector from "ol/layer/Vector";
+import GeoJSON from "ol/format/GeoJSON";
 
 export const BuilderProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [featureCollection, setFeatureCollection] =
@@ -26,20 +28,18 @@ export const BuilderProvider: React.FC<PropsWithChildren> = ({ children }) => {
     }));
   };
 
-  const removeFeature = (place_id: number) => {
+  const removeFeature = (id: string) => {
     setFeatureCollection((_featureCollection) => ({
       ..._featureCollection,
-      features: _featureCollection.features.filter(
-        (f) => f.properties.place_id !== place_id
-      ),
+      features: _featureCollection.features.filter((f) => f.meta.uuid !== id),
     }));
   };
 
-  const toggleFeatureVisibility = (place_id: number) => {
+  const toggleFeatureVisibility = (id: string) => {
     setFeatureCollection((_featureCollection) => ({
       ..._featureCollection,
       features: _featureCollection.features.map((f) =>
-        f.properties.place_id === place_id
+        f.meta.uuid === id
           ? { ...f, meta: { ...f.meta, visible: !f.meta.visible } }
           : f
       ),
@@ -47,9 +47,16 @@ export const BuilderProvider: React.FC<PropsWithChildren> = ({ children }) => {
   };
 
   const exportFeatureCollection = () => {
+    const _featureCollection = {
+      ...featureCollection,
+      features: featureCollection.features.map((f) => ({
+        ...f,
+        meta: undefined,
+      })),
+    };
     const dataStr =
       "data:text/json;charset=utf-8," +
-      encodeURIComponent(JSON.stringify(featureCollection));
+      encodeURIComponent(JSON.stringify(_featureCollection));
     const downloadAnchorNode = document.createElement("a");
     downloadAnchorNode.setAttribute("href", dataStr);
     downloadAnchorNode.setAttribute("download", `features.geojson`);
@@ -59,9 +66,18 @@ export const BuilderProvider: React.FC<PropsWithChildren> = ({ children }) => {
   };
 
   const saveEdits = () => {
-    map?.getLayers().forEach((layer) => {
-      console.log(layer.getRevision());
-    });
+    const geoJson = new GeoJSON();
+    map
+      ?.getLayers()
+      .getArray()
+      .forEach((layer) => {
+        if (layer instanceof Vector) {
+          const features = layer.getSource().getFeatures();
+          const featureCollection = geoJson.writeFeaturesObject(
+            features
+          ) as TFeatureCollection;
+        }
+      });
   };
 
   return (

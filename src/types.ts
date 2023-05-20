@@ -1,5 +1,6 @@
 export type TMetaProperties = {
   visible: boolean;
+  uuid: string;
 };
 
 export type TFeature = {

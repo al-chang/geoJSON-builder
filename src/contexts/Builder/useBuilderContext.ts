@@ -7,8 +7,8 @@ type TBuilderContext = {
   setEditMode: (editMode: boolean) => void;
   saveEdits: () => void;
   addFeature: (searchResponse: TSearchResponse) => void;
-  removeFeature: (place_id: number) => void;
-  toggleFeatureVisibility: (place_id: number) => void;
+  removeFeature: (id: string) => void;
+  toggleFeatureVisibility: (id: string) => void;
   exportFeatureCollection: () => void;
 };
 
