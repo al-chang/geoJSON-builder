@@ -49,58 +49,58 @@ export const areaFromBoundingBox = (boundingBox: number[]) => {
   return Math.abs(maxX - minX) * Math.abs(maxY - minY);
 };
 
-export const GeoJSONCenter = (geoJSON: TGeometry): Coordinate => {
-  switch (geoJSON.type) {
+export const geometryCenter = (geometry: TGeometry): Coordinate => {
+  switch (geometry.type) {
     case "Point":
-      return geoJSON.coordinates;
+      return geometry.coordinates;
     case "MultiPoint": {
-      const maxX = Math.max(...geoJSON.coordinates.map((c) => c[0]));
-      const minX = Math.min(...geoJSON.coordinates.map((c) => c[0]));
-      const maxY = Math.max(...geoJSON.coordinates.map((c) => c[1]));
-      const minY = Math.min(...geoJSON.coordinates.map((c) => c[1]));
+      const maxX = Math.max(...geometry.coordinates.map((c) => c[0]));
+      const minX = Math.min(...geometry.coordinates.map((c) => c[0]));
+      const maxY = Math.max(...geometry.coordinates.map((c) => c[1]));
+      const minY = Math.min(...geometry.coordinates.map((c) => c[1]));
       return [(maxX + minX) / 2, (maxY + minY) / 2];
     }
     case "LineString": {
-      const maxX = Math.max(...geoJSON.coordinates.map((c) => c[0]));
-      const minX = Math.min(...geoJSON.coordinates.map((c) => c[0]));
-      const maxY = Math.max(...geoJSON.coordinates.map((c) => c[1]));
-      const minY = Math.min(...geoJSON.coordinates.map((c) => c[1]));
+      const maxX = Math.max(...geometry.coordinates.map((c) => c[0]));
+      const minX = Math.min(...geometry.coordinates.map((c) => c[0]));
+      const maxY = Math.max(...geometry.coordinates.map((c) => c[1]));
+      const minY = Math.min(...geometry.coordinates.map((c) => c[1]));
       return [(maxX + minX) / 2, (maxY + minY) / 2];
     }
     case "MultiLineString": {
       const maxX = Math.max(
-        ...geoJSON.coordinates.map((c) => Math.max(...c.map((c) => c[0])))
+        ...geometry.coordinates.map((c) => Math.max(...c.map((c) => c[0])))
       );
       const minX = Math.min(
-        ...geoJSON.coordinates.map((c) => Math.min(...c.map((c) => c[0])))
+        ...geometry.coordinates.map((c) => Math.min(...c.map((c) => c[0])))
       );
       const maxY = Math.max(
-        ...geoJSON.coordinates.map((c) => Math.max(...c.map((c) => c[1])))
+        ...geometry.coordinates.map((c) => Math.max(...c.map((c) => c[1])))
       );
       const minY = Math.min(
-        ...geoJSON.coordinates.map((c) => Math.min(...c.map((c) => c[1])))
+        ...geometry.coordinates.map((c) => Math.min(...c.map((c) => c[1])))
       );
       return [(maxX + minX) / 2, (maxY + minY) / 2];
     }
     case "Polygon": {
-      const maxX = Math.max(...geoJSON.coordinates[0].map((c) => c[0]));
-      const minX = Math.min(...geoJSON.coordinates[0].map((c) => c[0]));
-      const maxY = Math.max(...geoJSON.coordinates[0].map((c) => c[1]));
-      const minY = Math.min(...geoJSON.coordinates[0].map((c) => c[1]));
+      const maxX = Math.max(...geometry.coordinates[0].map((c) => c[0]));
+      const minX = Math.min(...geometry.coordinates[0].map((c) => c[0]));
+      const maxY = Math.max(...geometry.coordinates[0].map((c) => c[1]));
+      const minY = Math.min(...geometry.coordinates[0].map((c) => c[1]));
       return [(maxX + minX) / 2, (maxY + minY) / 2];
     }
     case "MultiPolygon": {
       const maxX = Math.max(
-        ...geoJSON.coordinates.map((c) => Math.max(...c[0].map((c) => c[0])))
+        ...geometry.coordinates.map((c) => Math.max(...c[0].map((c) => c[0])))
       );
       const minX = Math.min(
-        ...geoJSON.coordinates.map((c) => Math.min(...c[0].map((c) => c[0])))
+        ...geometry.coordinates.map((c) => Math.min(...c[0].map((c) => c[0])))
       );
       const maxY = Math.max(
-        ...geoJSON.coordinates.map((c) => Math.max(...c[0].map((c) => c[1])))
+        ...geometry.coordinates.map((c) => Math.max(...c[0].map((c) => c[1])))
       );
       const minY = Math.min(
-        ...geoJSON.coordinates.map((c) => Math.min(...c[0].map((c) => c[1])))
+        ...geometry.coordinates.map((c) => Math.min(...c[0].map((c) => c[1])))
       );
       return [(maxX + minX) / 2, (maxY + minY) / 2];
     }
