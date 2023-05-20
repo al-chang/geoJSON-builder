@@ -33,7 +33,7 @@ export const searchResponseToFeature = (
       place_id: searchResponse.place_id,
       osm_id: searchResponse.osm_id,
       meta: {
-        visible: false,
+        visible: true,
         uuid: crypto.randomUUID(),
       },
     },

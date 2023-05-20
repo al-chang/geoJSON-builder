@@ -79,10 +79,6 @@ const Map: React.FC = () => {
     return () => mapObject.setTarget(undefined);
   }, [center, zoom, setMap]);
 
-  useEffect(() => {
-    console.log("featureCollection", featureCollection);
-  }, [featureCollection]);
-
   // Update map if center or zoom change
   useEffect(() => {
     if (!map) return;
