@@ -6,6 +6,7 @@ import SearchJson from "./components/Search/Search";
 import SideBarSwitch from "./components/SideBarSwitch";
 import { useState } from "react";
 import Builder from "./components/Builder/Builder";
+import SideBar from "./components/SideBar";
 
 const Content = styled.div`
   display: flex;
@@ -45,11 +46,12 @@ const App = () => {
       <MapProvider>
         <BuilderProvider>
           <SideBarContainer>
-            <SideBarSwitch
+            {/* <SideBarSwitch
               currentTab={sideBarContent}
               switcher={setSideBarContent}
             />
-            {sideBar()}
+            {sideBar()} */}
+            <SideBar />
           </SideBarContainer>
           <MapContainer>
             <Map />

@@ -21,6 +21,36 @@ export const vector = (geoJSON: TFeatureCollection | TFeature | TGeometry) => {
   });
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// export const debounce = <F extends (...args: any[]) => any>(
+//   func: F,
+//   wait: number
+// ) => {
+//   let timeout: ReturnType<typeof setTimeout> | undefined;
+//   const f = (...args: Parameters<F>) => {
+//     clearTimeout(timeout);
+//     timeout = setTimeout(() => func(...args), wait);
+//     console.log(timeout);
+//   };
+//   f.cancel = () => clearTimeout(timeout);
+//   f.bind(this);
+//   return f;
+// };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const debounce = <F extends (...args: any[]) => any>(
+  func: F,
+  wait: number
+) => {
+  let timeout: ReturnType<typeof setTimeout> | undefined;
+  const f = (...args: Parameters<F>) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), wait);
+  };
+  f.cancel = () => clearTimeout(timeout);
+  return f;
+};
+
 export const searchResponseToFeature = (
   searchResponse: TSearchResponse
 ): TFeature => {
