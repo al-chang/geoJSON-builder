@@ -3,17 +3,16 @@ import VectorSource from "ol/source/Vector";
 import { GeoJSON as GeoJSONFormat } from "ol/format";
 import {
   TFeature,
-  TGeoJSON,
   TSearchResponse,
-  GeoJSONType,
   TFeatureCollection,
+  TGeometry,
 } from "./types";
 import { get } from "ol/proj";
 import { Coordinate } from "ol/coordinate";
 
 export const osm = new OSM();
 
-export const vector = (geoJSON: TFeatureCollection | TFeature | TGeoJSON) => {
+export const vector = (geoJSON: TFeatureCollection | TFeature | TGeometry) => {
   return new VectorSource({
     features: new GeoJSONFormat().readFeatures(geoJSON, {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -50,24 +49,60 @@ export const areaFromBoundingBox = (boundingBox: number[]) => {
   return Math.abs(maxX - minX) * Math.abs(maxY - minY);
 };
 
-export const GeoJSONCenter = (geoJSON: TGeoJSON): Coordinate => {
-  // TODO: Implement for other GeoJSON types
-  switch (geoJSON.type) {
-    // case GeoJSONType.Point:
-    //   return geoJSON.coordinates;
-    // case GeoJSONType.MultiPolygon:
-    //   return GeoJSONCenter({
-    //     type: GeoJSONType.Polygon,
-    //     coordinates: geoJSON.coordinates[0],
-    //   });
-    case GeoJSONType.Polygon: {
-      const maxX = Math.max(...geoJSON.coordinates[0].map((c) => c[0]));
-      const minX = Math.min(...geoJSON.coordinates[0].map((c) => c[0]));
-      const maxY = Math.max(...geoJSON.coordinates[0].map((c) => c[1]));
-      const minY = Math.min(...geoJSON.coordinates[0].map((c) => c[1]));
+export const geometryCenter = (geometry: TGeometry): Coordinate => {
+  switch (geometry.type) {
+    case "Point":
+      return geometry.coordinates;
+    case "MultiPoint": {
+      const maxX = Math.max(...geometry.coordinates.map((c) => c[0]));
+      const minX = Math.min(...geometry.coordinates.map((c) => c[0]));
+      const maxY = Math.max(...geometry.coordinates.map((c) => c[1]));
+      const minY = Math.min(...geometry.coordinates.map((c) => c[1]));
       return [(maxX + minX) / 2, (maxY + minY) / 2];
     }
-    default:
-      throw new Error(`Unknown GeoJSON type: ${geoJSON.type}`);
+    case "LineString": {
+      const maxX = Math.max(...geometry.coordinates.map((c) => c[0]));
+      const minX = Math.min(...geometry.coordinates.map((c) => c[0]));
+      const maxY = Math.max(...geometry.coordinates.map((c) => c[1]));
+      const minY = Math.min(...geometry.coordinates.map((c) => c[1]));
+      return [(maxX + minX) / 2, (maxY + minY) / 2];
+    }
+    case "MultiLineString": {
+      const maxX = Math.max(
+        ...geometry.coordinates.map((c) => Math.max(...c.map((c) => c[0])))
+      );
+      const minX = Math.min(
+        ...geometry.coordinates.map((c) => Math.min(...c.map((c) => c[0])))
+      );
+      const maxY = Math.max(
+        ...geometry.coordinates.map((c) => Math.max(...c.map((c) => c[1])))
+      );
+      const minY = Math.min(
+        ...geometry.coordinates.map((c) => Math.min(...c.map((c) => c[1])))
+      );
+      return [(maxX + minX) / 2, (maxY + minY) / 2];
+    }
+    case "Polygon": {
+      const maxX = Math.max(...geometry.coordinates[0].map((c) => c[0]));
+      const minX = Math.min(...geometry.coordinates[0].map((c) => c[0]));
+      const maxY = Math.max(...geometry.coordinates[0].map((c) => c[1]));
+      const minY = Math.min(...geometry.coordinates[0].map((c) => c[1]));
+      return [(maxX + minX) / 2, (maxY + minY) / 2];
+    }
+    case "MultiPolygon": {
+      const maxX = Math.max(
+        ...geometry.coordinates.map((c) => Math.max(...c[0].map((c) => c[0])))
+      );
+      const minX = Math.min(
+        ...geometry.coordinates.map((c) => Math.min(...c[0].map((c) => c[0])))
+      );
+      const maxY = Math.max(
+        ...geometry.coordinates.map((c) => Math.max(...c[0].map((c) => c[1])))
+      );
+      const minY = Math.min(
+        ...geometry.coordinates.map((c) => Math.min(...c[0].map((c) => c[1])))
+      );
+      return [(maxX + minX) / 2, (maxY + minY) / 2];
+    }
   }
 };

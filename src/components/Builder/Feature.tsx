@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { TFeature as FeatureType } from "../../types";
-import { GeoJSONCenter } from "../../util";
+import { geometryCenter } from "../../util";
 import { useMapContext } from "../../contexts/Map/useMapContext";
 import { fromLonLat } from "ol/proj";
 import { Delete } from "@styled-icons/material/Delete";
@@ -36,7 +36,7 @@ const Feature: React.FC<FeatureProps> = ({ feature }) => {
   const { dispatchFeatureCollection } = useBuilderContext();
 
   const goToCenter = () => {
-    const center = GeoJSONCenter(feature.geometry);
+    const center = geometryCenter(feature.geometry);
     setCenter(fromLonLat(center));
   };
 

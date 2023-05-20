@@ -9,50 +9,76 @@ import FullScreenControl from "../Controls/FullScreenControl";
 import { osm, vector } from "../../util";
 import { Circle as CircleStyle, Fill, Stroke, Style } from "ol/style";
 import VectorLayer from "../Layers/VectorLayer";
-import { GeoJSONType } from "../../types";
 import styled from "styled-components";
 import { useBuilderContext } from "../../contexts/Builder/useBuilderContext";
 import { useMapContext } from "../../contexts/Map/useMapContext";
+import { TGeometryType } from "../../types";
 
 const MapContainer = styled.div`
   width: 100%;
   height: 100%;
 `;
 
-const styles: Record<GeoJSONType, Style> = {
-  MultiPolygon: new Style({
-    stroke: new Stroke({ color: "blue", width: 1 }),
-    fill: new Fill({ color: "rgba(0, 0, 255, 0.1)" }),
-  }),
-  Polygon: new Style({
-    stroke: new Stroke({ color: "blue", width: 1 }),
-    fill: new Fill({ color: "rgba(0, 0, 255, 0.1)" }),
-  }),
-  Point: new Style({
-    image: new CircleStyle({
-      radius: 5,
-      fill: new Fill({ color: "rgba(0, 0, 255, 0.1)" }),
-      stroke: new Stroke({ color: "red", width: 1 }),
-    }),
-  }),
-};
-
-const previewStyles: Record<GeoJSONType, Style> = {
-  MultiPolygon: new Style({
-    stroke: new Stroke({ color: "red", width: 1 }),
-    fill: new Fill({ color: "rgba(255, 0, 0, 0.1)" }),
-  }),
-  Polygon: new Style({
-    stroke: new Stroke({ color: "red", width: 1 }),
-    fill: new Fill({ color: "rgba(255, 0, 0, 0.1)" }),
-  }),
-  Point: new Style({
-    image: new CircleStyle({
-      radius: 5,
-      fill: new Fill({ color: "rgba(255, 0, 0, 0.1)" }),
-      stroke: new Stroke({ color: "red", width: 1 }),
-    }),
-  }),
+const style = (
+  geometryType: TGeometryType,
+  { red, green, blue } = { red: 0, green: 0, blue: 255 }
+): Style => {
+  switch (geometryType) {
+    case "Point":
+      return new Style({
+        image: new CircleStyle({
+          radius: 5,
+          fill: new Fill({ color: `rgba(${red}, ${green}, ${blue}, 0.1)` }),
+          stroke: new Stroke({
+            color: `rgb(${red}, ${green}, ${blue})`,
+            width: 1,
+          }),
+        }),
+      });
+    case "LineString":
+      return new Style({
+        stroke: new Stroke({
+          color: `rgb(${red}, ${green}, ${blue})`,
+          width: 1,
+        }),
+      });
+    case "Polygon":
+      return new Style({
+        fill: new Fill({ color: `rgba(${red}, ${green}, ${blue}, 0.1)` }),
+        stroke: new Stroke({
+          color: `rgb(${red}, ${green}, ${blue})`,
+          width: 1,
+        }),
+      });
+    case "MultiPoint":
+      return new Style({
+        image: new CircleStyle({
+          radius: 5,
+          fill: new Fill({ color: `rgba(${red}, ${green}, ${blue}, 0.1)` }),
+          stroke: new Stroke({
+            color: `rgb(${red}, ${green}, ${blue})`,
+            width: 1,
+          }),
+        }),
+      });
+    case "MultiLineString":
+      return new Style({
+        stroke: new Stroke({
+          color: `rgb(${red}, ${green}, ${blue})`,
+          width: 1,
+        }),
+      });
+    case "MultiPolygon":
+      return new Style({
+        fill: new Fill({ color: `rgba(${red}, ${green}, ${blue}, 0.1)` }),
+        stroke: new Stroke({
+          color: `rgb(${red}, ${green}, ${blue})`,
+          width: 1,
+        }),
+      });
+    default:
+      throw new Error(`Unsupported geometry type: ${geometryType}`);
+  }
 };
 
 // Credit to https://medium.com/swlh/how-to-incorporate-openlayers-maps-into-react-65b411985744 for inspiration
@@ -94,7 +120,7 @@ const Map: React.FC = () => {
           <VectorLayer
             key={feature.properties.place_id as string}
             source={vector(feature)}
-            style={styles[feature.geometry.type]}
+            style={style(feature.geometry.type)}
             editable={editMode}
             visible={feature.properties.meta.visible}
           />
@@ -102,7 +128,7 @@ const Map: React.FC = () => {
         {previewGeoJson && (
           <VectorLayer
             source={vector(previewGeoJson)}
-            style={previewStyles[previewGeoJson.type]}
+            style={style(previewGeoJson.type, { red: 255, green: 0, blue: 0 })}
           />
         )}
       </Layers>
