@@ -2,10 +2,6 @@ import Map from "./components/Map/Map";
 import styled from "styled-components";
 import { BuilderProvider } from "./contexts/Builder/builderProvider";
 import { MapProvider } from "./contexts/Map/mapProvider";
-import SearchJson from "./components/Search/Search";
-import SideBarSwitch from "./components/SideBarSwitch";
-import { useState } from "react";
-import Builder from "./components/Builder/Builder";
 import SideBar from "./components/SideBar";
 
 const Content = styled.div`
@@ -13,44 +9,30 @@ const Content = styled.div`
   width: 100vw;
 `;
 const SideBarContainer = styled.div`
-  width: 33%;
+  z-index: 1;
+  position: absolute;
+  width: 20vw;
+  height: 90vh;
+  left: 2%;
+  top: 2%;
+  background-color: #242424;
+  border-radius: 15px;
+  box-shadow: 0 0 10px grey;
+  min-width: 350px;
 `;
 const MapContainer = styled.div`
-  width: 67%;
+  width: 100vw;
   height: 100vh;
   position: sticky;
   top: 0;
 `;
 
-export enum SideBarContent {
-  Search = "SEARCH",
-  Builder = "BUILDER",
-}
-
 const App = () => {
-  const [sideBarContent, setSideBarContent] = useState<SideBarContent>(
-    SideBarContent.Search
-  );
-
-  const sideBar = () => {
-    switch (sideBarContent) {
-      case SideBarContent.Search:
-        return <SearchJson />;
-      case SideBarContent.Builder:
-        return <Builder />;
-    }
-  };
-
   return (
     <Content>
       <MapProvider>
         <BuilderProvider>
           <SideBarContainer>
-            {/* <SideBarSwitch
-              currentTab={sideBarContent}
-              switcher={setSideBarContent}
-            />
-            {sideBar()} */}
             <SideBar />
           </SideBarContainer>
           <MapContainer>

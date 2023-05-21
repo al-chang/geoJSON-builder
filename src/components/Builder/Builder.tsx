@@ -18,6 +18,7 @@ const Builder: React.FC = () => {
     featureCollection,
     setEditMode,
     dispatchFeatureCollection,
+    exportFeatureCollection,
   } = useBuilderContext();
   const { map } = useMapContext();
 
@@ -63,6 +64,7 @@ const Builder: React.FC = () => {
         ) : (
           <button onClick={() => setEditMode(true)}>Edit</button>
         )}
+        <button onClick={() => exportFeatureCollection()}>Export</button>
       </Header>
       {featureCollection.features.map((feature) => (
         <Feature key={feature.properties.meta.uuid} feature={feature} />

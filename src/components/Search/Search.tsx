@@ -10,10 +10,21 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   position: relative;
+  border-radius: 15px;
 `;
 
 const SearchBar = styled.input`
-  width: 98%;
+  width: 85%;
+  border-radius: 15px;
+  background-color: #fff;
+  color: black;
+  height: 25px;
+  margin: 10px auto;
+  padding: 0 2%;
+
+  &:focus {
+    outline: none;
+  }
 `;
 
 const SearchResultContainer = styled.div`
