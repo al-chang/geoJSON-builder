@@ -2,7 +2,8 @@ import Map from "./components/Map/Map";
 import styled from "styled-components";
 import { BuilderProvider } from "./contexts/Builder/builderProvider";
 import { MapProvider } from "./contexts/Map/mapProvider";
-import SideBar from "./components/SideBar";
+import SearchJson from "./components/Search/Search";
+import Builder from "./components/Builder/Builder";
 
 const Content = styled.div`
   display: flex;
@@ -19,6 +20,8 @@ const SideBarContainer = styled.div`
   border-radius: 15px;
   box-shadow: 0 0 10px grey;
   min-width: 350px;
+  display: flex;
+  flex-direction: column;
 `;
 const MapContainer = styled.div`
   width: 100vw;
@@ -33,7 +36,8 @@ const App = () => {
       <MapProvider>
         <BuilderProvider>
           <SideBarContainer>
-            <SideBar />
+            <SearchJson />
+            <Builder />
           </SideBarContainer>
           <MapContainer>
             <Map />

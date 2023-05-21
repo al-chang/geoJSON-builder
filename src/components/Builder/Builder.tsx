@@ -13,7 +13,10 @@ const Header = styled.div`
 `;
 
 const FeatureContainer = styled.div`
-  overflow-y: scroll;
+  overflow: scroll;
+  /* height: 100%; */
+  display: flex;
+  flex-direction: column;
 `;
 
 const Builder: React.FC = () => {

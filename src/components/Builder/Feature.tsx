@@ -15,20 +15,40 @@ import { useBuilderContext } from "../../contexts/Builder/useBuilderContext";
 
 const Container = styled.div`
   display: flex;
-  flex-direction: row;
-  border: 1px solid white;
-  margin: 5px;
+  flex-direction: column;
+  border: 1px solid grey;
+
+  &:first-child {
+    border-radius: 5px 5px 0 0;
+  }
+
+  &:last-child {
+    border-radius: 0 0 5px 5px;
+  }
+
+  &:only-child {
+    border-radius: 5px;
+  }
+`;
+
+const Header = styled.h3`
+  margin: 0;
+  font-size: medium;
+  padding: 5px;
 `;
 
 const Actions = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  width: 100px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  width: 100%;
 `;
 
 const ActionButton = styled.button`
   margin: 0;
-  padding: 0;
+  padding: 10px;
+  width: 40px;
+  height: "100%";
 `;
 
 type FeatureProps = {
@@ -63,7 +83,9 @@ const Feature: React.FC<FeatureProps> = ({ feature }) => {
 
   return (
     <Container>
-      <h3>{feature.properties.name as string}</h3>
+      <Header>
+        {(feature.properties.name as string) || feature.properties.meta.uuid}
+      </Header>
       <Actions>
         <ActionButton onClick={goToCenter}>
           <Locate />
