@@ -12,18 +12,8 @@ const Container = styled.div`
   position: relative;
 `;
 
-const SearchForm = styled.form`
-  width: 100%;
-  position: relative;
-`;
-
 const SearchBar = styled.input`
   width: 98%;
-`;
-
-const SearchButton = styled.button`
-  margin-right: 10px;
-  padding: 10px 0;
 `;
 
 const SearchResultContainer = styled.div`
@@ -73,6 +63,11 @@ const SearchJson: React.FC = () => {
     }
 
     document.addEventListener("click", closeResults);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        setShowResults(false);
+      }
+    });
 
     return () => {
       document.removeEventListener("focusin", handleFocus);
@@ -83,8 +78,13 @@ const SearchJson: React.FC = () => {
         inputElement.removeEventListener("click", stopProp);
       }
       document.removeEventListener("click", closeResults);
+      document.removeEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          setShowResults(false);
+        }
+      });
     };
-  }, [results]);
+  }, []);
 
   useEffect(() => {
     const search = async () => {
@@ -105,16 +105,18 @@ const SearchJson: React.FC = () => {
         ref={input}
         onChange={(e) => {
           setTerm(e.target.value);
+          setShowResults(true);
           debounceSetDebouncedTerm(e.target.value);
         }}
       />
-      {showResults && (
-        <SearchResultContainer ref={results}>
-          {searchResults.map((result) => (
-            <SearchResult key={result.osm_id} result={result} />
-          ))}
-        </SearchResultContainer>
-      )}
+
+      <SearchResultContainer ref={results}>
+        {showResults
+          ? searchResults.map((result) => (
+              <SearchResult key={result.osm_id} result={result} />
+            ))
+          : null}
+      </SearchResultContainer>
     </Container>
   );
 };
