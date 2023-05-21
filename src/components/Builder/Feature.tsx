@@ -1,6 +1,10 @@
 import styled from "styled-components";
 import { TFeature as FeatureType } from "../../types";
-import { geometryCenter } from "../../util";
+import {
+  calculateBoundingBox,
+  calculateZoomFromBoundingBox,
+  geometryCenter,
+} from "../../util";
 import { useMapContext } from "../../contexts/Map/useMapContext";
 import { fromLonLat } from "ol/proj";
 import { Delete } from "@styled-icons/material/Delete";
@@ -11,20 +15,33 @@ import { useBuilderContext } from "../../contexts/Builder/useBuilderContext";
 
 const Container = styled.div`
   display: flex;
-  flex-direction: row;
-  border: 1px solid white;
-  margin: 5px;
+  flex-direction: column;
+  padding-bottom: 5px;
+  border-bottom: 1px solid grey;
+
+  &:first-child {
+    border-top: 1px solid grey;
+  }
+`;
+
+const Header = styled.h3`
+  margin: 0;
+  font-size: medium;
+  padding: 5px;
 `;
 
 const Actions = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  width: 100px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  width: 100%;
 `;
 
 const ActionButton = styled.button`
   margin: 0;
-  padding: 0;
+  padding: 10px;
+  width: 40px;
+  height: "100%";
 `;
 
 type FeatureProps = {
@@ -32,11 +49,14 @@ type FeatureProps = {
 };
 
 const Feature: React.FC<FeatureProps> = ({ feature }) => {
-  const { setCenter } = useMapContext();
+  const { setCenter, setZoom } = useMapContext();
   const { dispatchFeatureCollection } = useBuilderContext();
 
   const goToCenter = () => {
     const center = geometryCenter(feature.geometry);
+    const boundingBox = calculateBoundingBox(feature.geometry);
+    const zoomLevel = calculateZoomFromBoundingBox(boundingBox);
+    setZoom(zoomLevel);
     setCenter(fromLonLat(center));
   };
 
@@ -56,10 +76,12 @@ const Feature: React.FC<FeatureProps> = ({ feature }) => {
 
   return (
     <Container>
-      <h3>{feature.properties.name as string}</h3>
+      <Header>
+        {(feature.properties.name as string) || feature.properties.meta.uuid}
+      </Header>
       <Actions>
         <ActionButton onClick={goToCenter}>
-          <Locate onClick={goToCenter} />
+          <Locate />
         </ActionButton>
         <ActionButton onClick={toggleVisibility}>
           {feature.properties.meta.visible ? <Hide /> : <Show />}

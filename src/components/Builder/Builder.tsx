@@ -12,12 +12,20 @@ const Header = styled.div`
   justify-content: space-between;
 `;
 
+const FeatureContainer = styled.div`
+  overflow: scroll;
+  /* height: 100%; */
+  display: flex;
+  flex-direction: column;
+`;
+
 const Builder: React.FC = () => {
   const {
     editMode,
     featureCollection,
     setEditMode,
     dispatchFeatureCollection,
+    exportFeatureCollection,
   } = useBuilderContext();
   const { map } = useMapContext();
 
@@ -63,13 +71,13 @@ const Builder: React.FC = () => {
         ) : (
           <button onClick={() => setEditMode(true)}>Edit</button>
         )}
+        <button onClick={() => exportFeatureCollection()}>Export</button>
       </Header>
-      {featureCollection.features.map((feature) => (
-        <Feature
-          key={feature.properties.place_id as string}
-          feature={feature}
-        />
-      ))}
+      <FeatureContainer>
+        {featureCollection.features.map((feature) => (
+          <Feature key={feature.properties.meta.uuid} feature={feature} />
+        ))}
+      </FeatureContainer>
     </>
   );
 };
