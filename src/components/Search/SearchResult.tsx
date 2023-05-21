@@ -3,7 +3,7 @@ import { fromLonLat } from "ol/proj";
 import { TSearchResponse } from "../../types";
 import { useBuilderContext } from "../../contexts/Builder/useBuilderContext";
 import { useMapContext } from "../../contexts/Map/useMapContext";
-import { geometryCenter } from "../../util";
+import { calculateZoomFromBoundingBox, geometryCenter } from "../../util";
 import styled from "styled-components";
 import { Show } from "styled-icons/boxicons-regular";
 
@@ -63,8 +63,14 @@ const SearchResult: React.FC<SearchResultProps> = ({ result }) => {
           ref={previewButton}
           onClick={() => {
             setPreviewGeoJson(result.geojson);
-            // TODO: set zoom based on size
-            setZoom(10);
+            setZoom(
+              calculateZoomFromBoundingBox({
+                minX: parseFloat(result.boundingbox[2]),
+                minY: parseFloat(result.boundingbox[0]),
+                maxX: parseFloat(result.boundingbox[3]),
+                maxY: parseFloat(result.boundingbox[1]),
+              })
+            );
             setCenter(fromLonLat(geometryCenter(result.geojson)));
           }}
           style={{ margin: 0, width: "100%", height: "100%" }}

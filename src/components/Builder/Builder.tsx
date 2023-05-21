@@ -12,6 +12,10 @@ const Header = styled.div`
   justify-content: space-between;
 `;
 
+const FeatureContainer = styled.div`
+  overflow-y: scroll;
+`;
+
 const Builder: React.FC = () => {
   const {
     editMode,
@@ -66,9 +70,11 @@ const Builder: React.FC = () => {
         )}
         <button onClick={() => exportFeatureCollection()}>Export</button>
       </Header>
-      {featureCollection.features.map((feature) => (
-        <Feature key={feature.properties.meta.uuid} feature={feature} />
-      ))}
+      <FeatureContainer>
+        {featureCollection.features.map((feature) => (
+          <Feature key={feature.properties.meta.uuid} feature={feature} />
+        ))}
+      </FeatureContainer>
     </>
   );
 };

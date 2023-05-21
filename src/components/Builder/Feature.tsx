@@ -1,6 +1,10 @@
 import styled from "styled-components";
 import { TFeature as FeatureType } from "../../types";
-import { geometryCenter } from "../../util";
+import {
+  calculateBoundingBox,
+  calculateZoomFromBoundingBox,
+  geometryCenter,
+} from "../../util";
 import { useMapContext } from "../../contexts/Map/useMapContext";
 import { fromLonLat } from "ol/proj";
 import { Delete } from "@styled-icons/material/Delete";
@@ -32,11 +36,14 @@ type FeatureProps = {
 };
 
 const Feature: React.FC<FeatureProps> = ({ feature }) => {
-  const { setCenter } = useMapContext();
+  const { setCenter, setZoom } = useMapContext();
   const { dispatchFeatureCollection } = useBuilderContext();
 
   const goToCenter = () => {
     const center = geometryCenter(feature.geometry);
+    const boundingBox = calculateBoundingBox(feature.geometry);
+    const zoomLevel = calculateZoomFromBoundingBox(boundingBox);
+    setZoom(zoomLevel);
     setCenter(fromLonLat(center));
   };
 
@@ -59,7 +66,7 @@ const Feature: React.FC<FeatureProps> = ({ feature }) => {
       <h3>{feature.properties.name as string}</h3>
       <Actions>
         <ActionButton onClick={goToCenter}>
-          <Locate onClick={goToCenter} />
+          <Locate />
         </ActionButton>
         <ActionButton onClick={toggleVisibility}>
           {feature.properties.meta.visible ? <Hide /> : <Show />}

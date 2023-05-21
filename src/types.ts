@@ -63,7 +63,7 @@ export type TSearchResponse = {
   licence: string;
   osm_type: string;
   osm_id: number;
-  boundingbox: string[];
+  boundingbox: [string, string, string, string];
   lat: string;
   lon: string;
   display_name: string;
