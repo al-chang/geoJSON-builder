@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { searchGeoJson } from "../../service/searchService";
 import SearchResult from "./SearchResult";
 import { TSearchResponse } from "../../types";
@@ -9,17 +9,16 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
 `;
 
 const SearchForm = styled.form`
   width: 100%;
-  display: grid;
-  grid-template-columns: 70% 30%;
   position: relative;
 `;
 
 const SearchBar = styled.input`
-  margin-right: 10px;
+  width: 98%;
 `;
 
 const SearchButton = styled.button`
@@ -37,11 +36,55 @@ const SearchJson: React.FC = () => {
   const [term, setTerm] = useState<string>("");
   const [debouncedTerm, setDebouncedTerm] = useState<string>("");
   const [searchResults, setSearchResults] = useState<TSearchResponse[]>([]);
+  const [showResults, setShowResults] = useState<boolean>(false);
 
+  const input = useRef<HTMLInputElement>(null);
+  const results = useRef<HTMLDivElement>(null);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceSetDebouncedTerm = useCallback(
     debounce(setDebouncedTerm, 500),
     []
   );
+
+  useEffect(() => {
+    const handleFocus = () => {
+      setShowResults(document.activeElement === input.current);
+    };
+
+    const stopProp = (e: Event) => {
+      e.stopPropagation();
+    };
+
+    const closeResults = () => {
+      setShowResults(false);
+    };
+
+    document.addEventListener("focusin", handleFocus);
+
+    const resultsElement = results.current;
+    if (resultsElement) {
+      resultsElement.addEventListener("click", stopProp);
+    }
+
+    const inputElement = input.current;
+    if (inputElement) {
+      inputElement.addEventListener("click", stopProp);
+    }
+
+    document.addEventListener("click", closeResults);
+
+    return () => {
+      document.removeEventListener("focusin", handleFocus);
+      if (resultsElement) {
+        resultsElement.removeEventListener("click", stopProp);
+      }
+      if (inputElement) {
+        inputElement.removeEventListener("click", stopProp);
+      }
+      document.removeEventListener("click", closeResults);
+    };
+  }, [results]);
 
   useEffect(() => {
     const search = async () => {
@@ -56,22 +99,22 @@ const SearchJson: React.FC = () => {
 
   return (
     <Container>
-      <SearchForm>
-        <SearchBar
-          className="text-black"
-          value={term}
-          onChange={(e) => {
-            setTerm(e.target.value);
-            debounceSetDebouncedTerm(e.target.value);
-          }}
-        />
-        {debouncedTerm}
-        <SearchResultContainer>
+      <SearchBar
+        className="text-black"
+        value={term}
+        ref={input}
+        onChange={(e) => {
+          setTerm(e.target.value);
+          debounceSetDebouncedTerm(e.target.value);
+        }}
+      />
+      {showResults && (
+        <SearchResultContainer ref={results}>
           {searchResults.map((result) => (
             <SearchResult key={result.osm_id} result={result} />
           ))}
         </SearchResultContainer>
-      </SearchForm>
+      )}
     </Container>
   );
 };
