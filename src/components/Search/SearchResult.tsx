@@ -5,7 +5,7 @@ import { useBuilderContext } from "../../contexts/Builder/useBuilderContext";
 import { useMapContext } from "../../contexts/Map/useMapContext";
 import { calculateZoomFromBoundingBox, geometryCenter } from "../../util";
 import styled from "styled-components";
-import { Show } from "styled-icons/boxicons-regular";
+import { Plus, Show } from "styled-icons/boxicons-regular";
 
 const Container = styled.div`
   display: flex;
@@ -34,6 +34,10 @@ const Actions = styled.div`
   flex-basis: 20%;
 
   button {
+    margin: 0;
+    width: "100%";
+    height: "100%";
+    padding: 0;
     :first-child {
       border-radius: 5px 0 0 5px;
     }
@@ -73,9 +77,8 @@ const SearchResult: React.FC<SearchResultProps> = ({ result }) => {
             );
             setCenter(fromLonLat(geometryCenter(result.geojson)));
           }}
-          style={{ margin: 0, width: "100%", height: "100%" }}
         >
-          <Show width="100%" height="100%" />
+          <Show />
         </button>
         <button
           type="button"
@@ -85,7 +88,7 @@ const SearchResult: React.FC<SearchResultProps> = ({ result }) => {
             setPreviewGeoJson(null);
           }}
         >
-          +
+          <Plus />
         </button>
       </Actions>
     </Container>

@@ -70,7 +70,9 @@ const SearchJson: React.FC = () => {
       setSearchResults(results);
     };
 
-    if (debouncedTerm) {
+    if (debouncedTerm === "") {
+      setSearchResults([]);
+    } else if (debouncedTerm) {
       search();
     }
   }, [debouncedTerm]);
