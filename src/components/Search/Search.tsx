@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { searchGeoJson } from "../../service/searchService";
 import SearchResult from "./SearchResult";
 import { TSearchResponse } from "../../types";
@@ -38,21 +38,18 @@ const SearchJson: React.FC = () => {
     const closeResults = () => {
       setShowResults(false);
     };
-
-    document.addEventListener("click", closeResults);
-    document.addEventListener("keydown", (e) => {
+    const closeResultsOnEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setShowResults(false);
       }
-    });
+    };
+
+    document.addEventListener("click", closeResults);
+    document.addEventListener("keydown", closeResultsOnEscape);
 
     return () => {
       document.removeEventListener("click", closeResults);
-      document.removeEventListener("keydown", (e) => {
-        if (e.key === "Escape") {
-          setShowResults(false);
-        }
-      });
+      document.removeEventListener("keydown", closeResultsOnEscape);
     };
   }, []);
 
@@ -80,7 +77,7 @@ const SearchJson: React.FC = () => {
         onClick={(e) => {
           e.nativeEvent.stopImmediatePropagation();
         }}
-        onFocus={(e) => {
+        onFocus={() => {
           setShowResults(true);
         }}
       />
