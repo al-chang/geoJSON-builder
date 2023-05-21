@@ -16,18 +16,11 @@ import { useBuilderContext } from "../../contexts/Builder/useBuilderContext";
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  border: 1px solid grey;
+  padding-bottom: 5px;
+  border-bottom: 1px solid grey;
 
   &:first-child {
-    border-radius: 5px 5px 0 0;
-  }
-
-  &:last-child {
-    border-radius: 0 0 5px 5px;
-  }
-
-  &:only-child {
-    border-radius: 5px;
+    border-top: 1px solid grey;
   }
 `;
 
