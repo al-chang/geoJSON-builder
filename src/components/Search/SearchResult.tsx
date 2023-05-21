@@ -1,4 +1,4 @@
-import React from "react";
+import React, { MouseEventHandler, useRef } from "react";
 import { fromLonLat } from "ol/proj";
 import { TSearchResponse } from "../../types";
 import { useBuilderContext } from "../../contexts/Builder/useBuilderContext";
@@ -48,6 +48,9 @@ type SearchResultProps = {
 };
 
 const SearchResult: React.FC<SearchResultProps> = ({ result }) => {
+  const previewButton = useRef<HTMLButtonElement>(null);
+  const addButton = useRef<HTMLButtonElement>(null);
+
   const { setPreviewGeoJson, setCenter, setZoom } = useMapContext();
   const { dispatchFeatureCollection } = useBuilderContext();
 
@@ -57,6 +60,7 @@ const SearchResult: React.FC<SearchResultProps> = ({ result }) => {
       <Actions>
         <button
           type="button"
+          ref={previewButton}
           onClick={() => {
             setPreviewGeoJson(result.geojson);
             // TODO: set zoom based on size
@@ -69,6 +73,7 @@ const SearchResult: React.FC<SearchResultProps> = ({ result }) => {
         </button>
         <button
           type="button"
+          ref={addButton}
           onClick={() => {
             dispatchFeatureCollection({ type: "addFeature", payload: result });
             setPreviewGeoJson(null);

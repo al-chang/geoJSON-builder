@@ -118,7 +118,7 @@ const Map: React.FC = () => {
         <TileLayer source={osm} zIndex={0} />
         {featureCollection.features.map((feature) => (
           <VectorLayer
-            key={feature.properties.place_id as string}
+            key={feature.properties.meta.uuid}
             source={vector(feature)}
             style={style(feature.geometry.type)}
             editable={editMode}

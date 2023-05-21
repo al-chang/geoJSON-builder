@@ -28,9 +28,6 @@ const SearchJson: React.FC = () => {
   const [searchResults, setSearchResults] = useState<TSearchResponse[]>([]);
   const [showResults, setShowResults] = useState<boolean>(false);
 
-  const input = useRef<HTMLInputElement>(null);
-  const results = useRef<HTMLDivElement>(null);
-
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceSetDebouncedTerm = useCallback(
     debounce(setDebouncedTerm, 500),
@@ -38,29 +35,9 @@ const SearchJson: React.FC = () => {
   );
 
   useEffect(() => {
-    const handleFocus = () => {
-      setShowResults(document.activeElement === input.current);
-    };
-
-    const stopProp = (e: Event) => {
-      e.stopPropagation();
-    };
-
     const closeResults = () => {
       setShowResults(false);
     };
-
-    document.addEventListener("focusin", handleFocus);
-
-    const resultsElement = results.current;
-    if (resultsElement) {
-      resultsElement.addEventListener("click", stopProp);
-    }
-
-    const inputElement = input.current;
-    if (inputElement) {
-      inputElement.addEventListener("click", stopProp);
-    }
 
     document.addEventListener("click", closeResults);
     document.addEventListener("keydown", (e) => {
@@ -70,13 +47,6 @@ const SearchJson: React.FC = () => {
     });
 
     return () => {
-      document.removeEventListener("focusin", handleFocus);
-      if (resultsElement) {
-        resultsElement.removeEventListener("click", stopProp);
-      }
-      if (inputElement) {
-        inputElement.removeEventListener("click", stopProp);
-      }
       document.removeEventListener("click", closeResults);
       document.removeEventListener("keydown", (e) => {
         if (e.key === "Escape") {
@@ -102,15 +72,24 @@ const SearchJson: React.FC = () => {
       <SearchBar
         className="text-black"
         value={term}
-        ref={input}
         onChange={(e) => {
           setTerm(e.target.value);
           setShowResults(true);
           debounceSetDebouncedTerm(e.target.value);
         }}
+        onClick={(e) => {
+          e.nativeEvent.stopImmediatePropagation();
+        }}
+        onFocus={(e) => {
+          setShowResults(true);
+        }}
       />
 
-      <SearchResultContainer ref={results}>
+      <SearchResultContainer
+        onClick={(e) => {
+          e.nativeEvent.stopImmediatePropagation();
+        }}
+      >
         {showResults
           ? searchResults.map((result) => (
               <SearchResult key={result.osm_id} result={result} />
