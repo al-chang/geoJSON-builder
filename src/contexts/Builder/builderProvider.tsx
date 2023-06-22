@@ -1,5 +1,5 @@
 import { PropsWithChildren, useReducer, useState } from "react";
-import { TFeatureCollection } from "../../types";
+import { TFeatureCollection, metaSymbol } from "../../types";
 import { searchResponseToFeature } from "../../util";
 import { BuilderContext, FeatureCollectionActions } from "./useBuilderContext";
 
@@ -17,21 +17,21 @@ const featureCollectionReducer = (
       return {
         ...state,
         features: state.features.filter(
-          (f) => f.properties.meta.uuid !== action.payload
+          (f) => f.properties[metaSymbol].uuid !== action.payload
         ),
       };
     case "toggleFeatureVisibility":
       return {
         ...state,
         features: state.features.map((f) =>
-          f.properties.meta.uuid === action.payload
+          f.properties[metaSymbol].uuid === action.payload
             ? {
                 ...f,
                 properties: {
                   ...f.properties,
-                  meta: {
-                    ...f.properties.meta,
-                    visible: !f.properties.meta.visible,
+                  [metaSymbol]: {
+                    ...f.properties[metaSymbol],
+                    visible: !f.properties[metaSymbol].visible,
                   },
                 },
               }
@@ -46,11 +46,12 @@ const featureCollectionReducer = (
           geometry:
             action.payload.find(
               (feature) =>
-                feature.properties.meta.uuid === f.properties.meta.uuid
+                feature.properties[metaSymbol].uuid ===
+                f.properties[metaSymbol].uuid
             )?.geometry || f.geometry,
           properties: {
             ...f.properties,
-            meta: { ...f.properties.meta, visible: true },
+            [metaSymbol]: { ...f.properties[metaSymbol], visible: true },
           },
         })),
       };

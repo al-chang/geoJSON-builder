@@ -6,6 +6,7 @@ import {
   TSearchResponse,
   TFeatureCollection,
   TGeometry,
+  metaSymbol,
 } from "./types";
 import { get } from "ol/proj";
 import { Coordinate } from "ol/coordinate";
@@ -45,7 +46,7 @@ export const searchResponseToFeature = (
       name: searchResponse.display_name,
       place_id: searchResponse.place_id,
       osm_id: searchResponse.osm_id,
-      meta: {
+      [metaSymbol]: {
         visible: true,
         uuid: crypto.randomUUID(),
       },

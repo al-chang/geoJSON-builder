@@ -40,17 +40,22 @@ export type TGeometry =
 
 export type TGeometryType = TGeometry["type"];
 
+export const metaSymbol = Symbol("meta");
+
 export type TMetaProperties = {
   visible: boolean;
   uuid: string;
 };
 
+export type TProperties = {
+  [metaSymbol]: TMetaProperties;
+  [key: string]: string | number;
+};
+
 export type TFeature = {
   geometry: TGeometry;
   type: "Feature";
-  properties: Record<string, unknown> & {
-    meta: TMetaProperties;
-  };
+  properties: TProperties;
 };
 
 export type TFeatureCollection = {

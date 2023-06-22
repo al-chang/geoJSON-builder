@@ -4,7 +4,7 @@ import Feature from "./Feature";
 import { useMapContext } from "../../contexts/Map/useMapContext";
 import Vector from "ol/layer/Vector";
 import { GeoJSON } from "ol/format";
-import { TFeature, TFeatureCollection } from "../../types";
+import { TFeature, TFeatureCollection, metaSymbol } from "../../types";
 
 const Header = styled.div`
   display: flex;
@@ -75,7 +75,10 @@ const Builder: React.FC = () => {
       </Header>
       <FeatureContainer>
         {featureCollection.features.map((feature) => (
-          <Feature key={feature.properties.meta.uuid} feature={feature} />
+          <Feature
+            key={feature.properties[metaSymbol].uuid}
+            feature={feature}
+          />
         ))}
       </FeatureContainer>
     </>
