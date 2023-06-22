@@ -75,7 +75,7 @@ export const BuilderProvider: React.FC<PropsWithChildren> = ({ children }) => {
       ...featureCollection,
       features: featureCollection.features.map((f) => ({
         ...f,
-        meta: undefined,
+        [metaSymbol]: undefined,
       })),
     };
     const dataStr =
