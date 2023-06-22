@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { fromLonLat } from "ol/proj";
-import { TSearchResponse } from "../../types";
+import { TGeometry, TSearchResponse } from "../../types";
 import { useBuilderContext } from "../../contexts/Builder/useBuilderContext";
 import { useMapContext } from "../../contexts/Map/useMapContext";
 import { calculateZoomFromBoundingBox, geometryCenter } from "../../util";
@@ -66,7 +66,13 @@ const SearchResult: React.FC<SearchResultProps> = ({ result }) => {
           type="button"
           ref={previewButton}
           onClick={() => {
-            setPreviewGeoJson(result.geojson);
+            const geoJson =
+              result.geojson ??
+              ({
+                type: "Point",
+                coordinates: [parseFloat(result.lon), parseFloat(result.lat)],
+              } as TGeometry);
+            setPreviewGeoJson(geoJson);
             setZoom(
               calculateZoomFromBoundingBox({
                 minX: parseFloat(result.boundingbox[2]),
@@ -75,7 +81,7 @@ const SearchResult: React.FC<SearchResultProps> = ({ result }) => {
                 maxY: parseFloat(result.boundingbox[1]),
               })
             );
-            setCenter(fromLonLat(geometryCenter(result.geojson)));
+            setCenter(fromLonLat(geometryCenter(geoJson)));
           }}
         >
           <Show />

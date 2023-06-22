@@ -112,10 +112,6 @@ const Map: React.FC = () => {
     map.getView().setZoom(zoom);
   }, [center, zoom, map]);
 
-  useEffect(() => {
-    console.log(featureCollection.features);
-  });
-
   return (
     <MapContainer ref={mapRef}>
       <Layers>

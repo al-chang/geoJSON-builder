@@ -77,5 +77,5 @@ export type TSearchResponse = {
   type: string;
   importance: number;
   icon: string;
-  geojson: TGeometry;
+  geojson?: TGeometry;
 };
