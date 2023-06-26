@@ -15,10 +15,10 @@ const Header = styled.div`
 
 const FeatureContainer = styled.div`
   overflow: scroll;
-  /* height: 100%; */
   display: flex;
   flex-direction: column;
   background-color: #242424;
+  border-radius: 0 0 15px 15px;
 `;
 
 const Builder: React.FC = () => {

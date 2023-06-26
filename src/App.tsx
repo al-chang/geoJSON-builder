@@ -51,10 +51,10 @@ const App = () => {
       <MapProvider>
         <BuilderProvider>
           <SideBarContainer>
-            <div style={{ position: "relative" }}>
-              <SearchJson />
-              <Builder />
-            </div>
+            {/* <div style={{ position: "relative" }}> */}
+            <SearchJson />
+            <Builder />
+            {/* </div> */}
             {/* <StyledProperties /> */}
           </SideBarContainer>
           <MapContainer>
