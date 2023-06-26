@@ -15,7 +15,7 @@ const Header = styled.div`
 
 const FeatureContainer = styled.div`
   overflow: scroll;
-  height: 100%;
+  /* height: 100%; */
   display: flex;
   flex-direction: column;
   background-color: #242424;
