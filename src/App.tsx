@@ -11,7 +11,7 @@ const Content = styled.div`
   width: 100vw;
 `;
 const SideBarContainer = styled.div`
-  z-index: 1;
+  z-index: 2;
   position: absolute;
   width: 20vw;
   height: 90vh;
@@ -26,17 +26,16 @@ const SideBarContainer = styled.div`
 `;
 const StyledProperties = styled(Properties)`
   position: absolute;
-  top: 0;
-  left: 20px;
-  width: 100%;
+  top: 2%;
+  left: 5%;
+  width: 20vw;
+  min-width: 350px;
   height: 90vh;
   background-color: white;
-  border-top: 1px solid black;
   border-radius: 15px;
-  z-index: -1;
-
-  @keyframes identifier {
-  }
+  z-index: 1;
+  box-shadow: 0 0 10px grey;
+  transition: left 0.5s ease-in-out;
 `;
 const MapContainer = styled.div`
   width: 100vw;
@@ -51,12 +50,10 @@ const App = () => {
       <MapProvider>
         <BuilderProvider>
           <SideBarContainer>
-            {/* <div style={{ position: "relative" }}> */}
             <SearchJson />
             <Builder />
-            {/* </div> */}
-            {/* <StyledProperties /> */}
           </SideBarContainer>
+          <StyledProperties />
           <MapContainer>
             <Map />
           </MapContainer>

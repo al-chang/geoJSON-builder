@@ -7,6 +7,8 @@ type TBuilderContext = {
   editMode: boolean;
   setEditMode: (editMode: boolean) => void;
   exportFeatureCollection: () => void;
+  propertyIDEdit: string | null;
+  setPropertyIDEdit: (uuid: string | null) => void;
 };
 
 export const BuilderContext = createContext<TBuilderContext>(null!);

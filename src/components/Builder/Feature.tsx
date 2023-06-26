@@ -50,7 +50,7 @@ type FeatureProps = {
 
 const Feature: React.FC<FeatureProps> = ({ feature }) => {
   const { setCenter, setZoom } = useMapContext();
-  const { dispatchFeatureCollection } = useBuilderContext();
+  const { dispatchFeatureCollection, setPropertyIDEdit } = useBuilderContext();
 
   const goToCenter = () => {
     const center = geometryCenter(feature.geometry);
@@ -87,7 +87,9 @@ const Feature: React.FC<FeatureProps> = ({ feature }) => {
         <ActionButton onClick={toggleVisibility}>
           {feature.properties[metaSymbol].visible ? <Hide /> : <Show />}
         </ActionButton>
-        <ActionButton>
+        <ActionButton
+          onClick={() => setPropertyIDEdit(feature.properties[metaSymbol].uuid)}
+        >
           <Edit />
         </ActionButton>
         <ActionButton onClick={deleteFeature}>

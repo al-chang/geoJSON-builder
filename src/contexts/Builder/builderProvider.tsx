@@ -69,6 +69,7 @@ export const BuilderProvider: React.FC<PropsWithChildren> = ({ children }) => {
     }
   );
   const [editMode, setEditMode] = useState<boolean>(false);
+  const [propertyIDEdit, setPropertyIDEdit] = useState<string | null>(null);
 
   const exportFeatureCollection = () => {
     const _featureCollection = {
@@ -97,6 +98,8 @@ export const BuilderProvider: React.FC<PropsWithChildren> = ({ children }) => {
         exportFeatureCollection,
         editMode,
         setEditMode,
+        propertyIDEdit,
+        setPropertyIDEdit,
       }}
     >
       {children}
