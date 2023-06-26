@@ -27,7 +27,7 @@ const SideBarContainer = styled.div`
 const StyledProperties = styled(Properties)`
   position: absolute;
   top: 2%;
-  left: 5%;
+  /* left: 5%; */
   width: 20vw;
   min-width: 350px;
   height: 90vh;
