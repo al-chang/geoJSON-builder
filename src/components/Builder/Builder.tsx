@@ -10,13 +10,15 @@ const Header = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  background-color: #242424;
 `;
 
 const FeatureContainer = styled.div`
   overflow: scroll;
-  /* height: 100%; */
+  height: 100%;
   display: flex;
   flex-direction: column;
+  background-color: #242424;
 `;
 
 const Builder: React.FC = () => {

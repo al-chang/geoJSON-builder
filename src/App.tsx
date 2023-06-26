@@ -4,6 +4,7 @@ import { BuilderProvider } from "./contexts/Builder/builderProvider";
 import { MapProvider } from "./contexts/Map/mapProvider";
 import SearchJson from "./components/Search/Search";
 import Builder from "./components/Builder/Builder";
+import Properties from "./components/Builder/Properties";
 
 const Content = styled.div`
   display: flex;
@@ -23,6 +24,20 @@ const SideBarContainer = styled.div`
   display: flex;
   flex-direction: column;
 `;
+const StyledProperties = styled(Properties)`
+  position: absolute;
+  top: 0;
+  left: 20px;
+  width: 100%;
+  height: 90vh;
+  background-color: white;
+  border-top: 1px solid black;
+  border-radius: 15px;
+  z-index: -1;
+
+  @keyframes identifier {
+  }
+`;
 const MapContainer = styled.div`
   width: 100vw;
   height: 100vh;
@@ -36,8 +51,11 @@ const App = () => {
       <MapProvider>
         <BuilderProvider>
           <SideBarContainer>
-            <SearchJson />
-            <Builder />
+            <div style={{ position: "relative" }}>
+              <SearchJson />
+              <Builder />
+            </div>
+            {/* <StyledProperties /> */}
           </SideBarContainer>
           <MapContainer>
             <Map />

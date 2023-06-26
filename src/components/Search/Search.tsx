@@ -11,7 +11,8 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   position: relative;
-  border-radius: 15px;
+  border-radius: 15px 15px 0 0;
+  background-color: #242424;
 `;
 
 const SearchBar = styled.input`
