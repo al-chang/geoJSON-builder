@@ -63,7 +63,6 @@ export const Properties: React.FC<TPropertiesProps> = ({ className }) => {
 
           const payload: TProperties = { [metaSymbol]: metaProperties };
           properties?.forEach(({ name, value }) => {
-            console.log(name, "-", value);
             payload[name] = value;
           });
           dispatchFeatureCollection({ type: "savePropertyEdits", payload });

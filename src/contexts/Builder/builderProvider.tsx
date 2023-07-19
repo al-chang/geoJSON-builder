@@ -60,13 +60,7 @@ const featureCollectionReducer = (
         ...state,
         features: state.features.map((f) =>
           f.properties[metaSymbol].uuid === action.payload[metaSymbol].uuid
-            ? {
-                ...f,
-                properties: {
-                  ...f.properties,
-                  [action.payload.name]: action.payload.value,
-                },
-              }
+            ? { ...f, properties: action.payload }
             : f
         ),
       };
