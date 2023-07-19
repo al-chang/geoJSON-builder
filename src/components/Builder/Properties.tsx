@@ -22,7 +22,8 @@ export const Properties: React.FC<TPropertiesProps> = ({ className }) => {
   const [show, setShow] = useState(false);
   const [properties, setProperties] = useState<TPropertyData[] | null>(null);
 
-  const { featureCollection, propertyIDEdit } = useBuilderContext();
+  const { featureCollection, propertyIDEdit, dispatchFeatureCollection } =
+    useBuilderContext();
 
   useEffect(() => {
     if (propertyIDEdit) {
@@ -53,6 +54,23 @@ export const Properties: React.FC<TPropertiesProps> = ({ className }) => {
       style={{ left: show ? "calc(max(350px, 20vw) + 3%)" : "2%" }}
     >
       <button onClick={() => setShow(false)}>Collapse</button>
+      <button
+        onClick={() => {
+          const metaProperties = featureCollection.features.find(
+            (feature) => feature.properties[metaSymbol].uuid === propertyIDEdit
+          )?.properties[metaSymbol];
+          if (!metaProperties) return;
+
+          const payload: TProperties = { [metaSymbol]: metaProperties };
+          properties?.forEach(({ name, value }) => {
+            console.log(name, "-", value);
+            payload[name] = value;
+          });
+          dispatchFeatureCollection({ type: "savePropertyEdits", payload });
+        }}
+      >
+        Save
+      </button>
       {properties?.map(({ id, name, value }) => (
         <Property
           key={id}

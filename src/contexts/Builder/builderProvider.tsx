@@ -55,6 +55,21 @@ const featureCollectionReducer = (
           },
         })),
       };
+    case "savePropertyEdits":
+      return {
+        ...state,
+        features: state.features.map((f) =>
+          f.properties[metaSymbol].uuid === action.payload[metaSymbol].uuid
+            ? {
+                ...f,
+                properties: {
+                  ...f.properties,
+                  [action.payload.name]: action.payload.value,
+                },
+              }
+            : f
+        ),
+      };
     default:
       return state;
   }

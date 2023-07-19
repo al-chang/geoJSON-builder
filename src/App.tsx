@@ -10,7 +10,7 @@ const Content = styled.div`
   display: flex;
   width: 100vw;
 `;
-const SideBarContainer = styled.div`
+const SideBarContainer = styled.aside`
   z-index: 2;
   position: absolute;
   width: 20vw;
