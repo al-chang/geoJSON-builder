@@ -6,6 +6,7 @@ import { useMapContext } from "../../contexts/Map/useMapContext";
 import { calculateZoomFromBoundingBox, geometryCenter } from "../../util";
 import styled from "styled-components";
 import { Plus, Show } from "styled-icons/boxicons-regular";
+import { getGeoJson } from "../../service/searchService";
 
 const Container = styled.div`
   display: flex;
@@ -65,13 +66,18 @@ const SearchResult: React.FC<SearchResultProps> = ({ result }) => {
         <button
           type="button"
           ref={previewButton}
-          onClick={() => {
-            const geoJson =
-              result.geojson ??
-              ({
-                type: "Point",
-                coordinates: [parseFloat(result.lon), parseFloat(result.lat)],
-              } as TGeometry);
+          onClick={async () => {
+            let geoJson;
+            try {
+              geoJson = (await getGeoJson(`${result.osm_id}`)).geometry;
+            } catch {
+              geoJson =
+                result.geojson ??
+                ({
+                  type: "Point",
+                  coordinates: [parseFloat(result.lon), parseFloat(result.lat)],
+                } as TGeometry);
+            }
             setPreviewGeoJson(geoJson);
             setZoom(
               calculateZoomFromBoundingBox({

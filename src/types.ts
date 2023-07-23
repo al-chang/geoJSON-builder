@@ -79,3 +79,8 @@ export type TSearchResponse = {
   icon: string;
   geojson?: TGeometry;
 };
+
+export type TDetailResponse = {
+  centroid: TPoint;
+  geometry: TGeometry;
+};
