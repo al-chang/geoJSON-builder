@@ -6,6 +6,7 @@ import {
   TSearchResponse,
   TFeatureCollection,
   TGeometry,
+  metaSymbol,
 } from "./types";
 import { get } from "ol/proj";
 import { Coordinate } from "ol/coordinate";
@@ -35,23 +36,20 @@ export const debounce = <F extends (...args: any[]) => any>(
   return f;
 };
 
-export const searchResponseToFeature = (
-  searchResponse: TSearchResponse
-): TFeature => {
-  return {
-    geometry: searchResponse.geojson,
-    type: "Feature",
-    properties: {
-      name: searchResponse.display_name,
-      place_id: searchResponse.place_id,
-      osm_id: searchResponse.osm_id,
-      meta: {
-        visible: true,
-        uuid: crypto.randomUUID(),
-      },
+export const geometryToFeature = (
+  geometry: TGeometry,
+  properties?: { [key: string]: string | number }
+): TFeature => ({
+  geometry: geometry,
+  type: "Feature",
+  properties: {
+    ...properties,
+    [metaSymbol]: {
+      visible: true,
+      uuid: crypto.randomUUID(),
     },
-  };
-};
+  },
+});
 
 export const dimensionsFromBoundingBox = (boundingBox: number[]) => {
   const [minX, minY, maxX, maxY] = boundingBox;

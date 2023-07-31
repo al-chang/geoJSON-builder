@@ -4,13 +4,15 @@ import SearchResult from "./SearchResult";
 import { TSearchResponse } from "../../types";
 import styled from "styled-components";
 import { debounce } from "../../util";
+import { useMapContext } from "../../contexts/Map/useMapContext";
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
-  border-radius: 15px;
+  border-radius: 15px 15px 0 0;
+  background-color: #242424;
 `;
 
 const SearchBar = styled.input`
@@ -38,6 +40,8 @@ const SearchJson: React.FC = () => {
   const [debouncedTerm, setDebouncedTerm] = useState<string>("");
   const [searchResults, setSearchResults] = useState<TSearchResponse[]>([]);
   const [showResults, setShowResults] = useState<boolean>(false);
+
+  const { setPreviewGeoJson } = useMapContext();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceSetDebouncedTerm = useCallback(
@@ -75,7 +79,9 @@ const SearchJson: React.FC = () => {
     } else if (debouncedTerm) {
       search();
     }
-  }, [debouncedTerm]);
+
+    setPreviewGeoJson(null);
+  }, [debouncedTerm, setPreviewGeoJson]);
 
   return (
     <Container>

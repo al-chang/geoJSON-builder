@@ -1,11 +1,16 @@
 import React, { useRef } from "react";
 import { fromLonLat } from "ol/proj";
-import { TSearchResponse } from "../../types";
+import { TGeometry, TSearchResponse } from "../../types";
 import { useBuilderContext } from "../../contexts/Builder/useBuilderContext";
 import { useMapContext } from "../../contexts/Map/useMapContext";
-import { calculateZoomFromBoundingBox, geometryCenter } from "../../util";
+import {
+  calculateZoomFromBoundingBox,
+  geometryCenter,
+  geometryToFeature,
+} from "../../util";
 import styled from "styled-components";
 import { Plus, Show } from "styled-icons/boxicons-regular";
+import { getGeoJson } from "../../service/searchService";
 
 const Container = styled.div`
   display: flex;
@@ -58,6 +63,20 @@ const SearchResult: React.FC<SearchResultProps> = ({ result }) => {
   const { setPreviewGeoJson, setCenter, setZoom } = useMapContext();
   const { dispatchFeatureCollection } = useBuilderContext();
 
+  const retrieveGeometry = async (): Promise<TGeometry> => {
+    try {
+      return (await getGeoJson(`${result.osm_id}`)).geometry;
+    } catch {
+      return (
+        result.geojson ??
+        ({
+          type: "Point",
+          coordinates: [parseFloat(result.lon), parseFloat(result.lat)],
+        } as TGeometry)
+      );
+    }
+  };
+
   return (
     <Container>
       <DisplayName>{result.display_name}</DisplayName>
@@ -65,8 +84,10 @@ const SearchResult: React.FC<SearchResultProps> = ({ result }) => {
         <button
           type="button"
           ref={previewButton}
-          onClick={() => {
-            setPreviewGeoJson(result.geojson);
+          onClick={async () => {
+            const geometry = await retrieveGeometry();
+
+            setPreviewGeoJson(geometry);
             setZoom(
               calculateZoomFromBoundingBox({
                 minX: parseFloat(result.boundingbox[2]),
@@ -75,7 +96,7 @@ const SearchResult: React.FC<SearchResultProps> = ({ result }) => {
                 maxY: parseFloat(result.boundingbox[1]),
               })
             );
-            setCenter(fromLonLat(geometryCenter(result.geojson)));
+            setCenter(fromLonLat(geometryCenter(geometry)));
           }}
         >
           <Show />
@@ -83,8 +104,17 @@ const SearchResult: React.FC<SearchResultProps> = ({ result }) => {
         <button
           type="button"
           ref={addButton}
-          onClick={() => {
-            dispatchFeatureCollection({ type: "addFeature", payload: result });
+          onClick={async () => {
+            const geometry = await retrieveGeometry();
+
+            dispatchFeatureCollection({
+              type: "addFeature",
+              payload: geometryToFeature(geometry, {
+                name: result.display_name,
+                place_id: result.place_id,
+                osm_id: result.osm_id,
+              }),
+            });
             setPreviewGeoJson(null);
           }}
         >

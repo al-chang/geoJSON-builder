@@ -12,7 +12,8 @@ import VectorLayer from "../Layers/VectorLayer";
 import styled from "styled-components";
 import { useBuilderContext } from "../../contexts/Builder/useBuilderContext";
 import { useMapContext } from "../../contexts/Map/useMapContext";
-import { TGeometryType } from "../../types";
+import { TGeometryType, metaSymbol } from "../../types";
+import ZoomSlider from "../Controls/ZoomSlider";
 
 const MapContainer = styled.div`
   width: 100%;
@@ -118,11 +119,11 @@ const Map: React.FC = () => {
         <TileLayer source={osm} zIndex={0} />
         {featureCollection.features.map((feature) => (
           <VectorLayer
-            key={feature.properties.meta.uuid}
+            key={feature.properties[metaSymbol].uuid}
             source={vector(feature)}
             style={style(feature.geometry.type)}
             editable={editMode}
-            visible={feature.properties.meta.visible}
+            visible={feature.properties[metaSymbol].visible}
           />
         ))}
         {previewGeoJson && (
@@ -134,6 +135,7 @@ const Map: React.FC = () => {
       </Layers>
       <Controls>
         <FullScreenControl />
+        <ZoomSlider />
       </Controls>
     </MapContainer>
   );

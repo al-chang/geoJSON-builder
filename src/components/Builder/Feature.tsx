@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { TFeature as FeatureType } from "../../types";
+import { TFeature as FeatureType, metaSymbol } from "../../types";
 import {
   calculateBoundingBox,
   calculateZoomFromBoundingBox,
@@ -50,7 +50,7 @@ type FeatureProps = {
 
 const Feature: React.FC<FeatureProps> = ({ feature }) => {
   const { setCenter, setZoom } = useMapContext();
-  const { dispatchFeatureCollection } = useBuilderContext();
+  const { dispatchFeatureCollection, setPropertyIDEdit } = useBuilderContext();
 
   const goToCenter = () => {
     const center = geometryCenter(feature.geometry);
@@ -63,30 +63,33 @@ const Feature: React.FC<FeatureProps> = ({ feature }) => {
   const deleteFeature = () => {
     dispatchFeatureCollection({
       type: "removeFeature",
-      payload: feature.properties.meta.uuid,
+      payload: feature.properties[metaSymbol].uuid,
     });
   };
 
   const toggleVisibility = () => {
     dispatchFeatureCollection({
       type: "toggleFeatureVisibility",
-      payload: feature.properties.meta.uuid,
+      payload: feature.properties[metaSymbol].uuid,
     });
   };
 
   return (
     <Container>
       <Header>
-        {(feature.properties.name as string) || feature.properties.meta.uuid}
+        {(feature.properties.name as string) ||
+          feature.properties[metaSymbol].uuid}
       </Header>
       <Actions>
         <ActionButton onClick={goToCenter}>
           <Locate />
         </ActionButton>
         <ActionButton onClick={toggleVisibility}>
-          {feature.properties.meta.visible ? <Hide /> : <Show />}
+          {feature.properties[metaSymbol].visible ? <Hide /> : <Show />}
         </ActionButton>
-        <ActionButton>
+        <ActionButton
+          onClick={() => setPropertyIDEdit(feature.properties[metaSymbol].uuid)}
+        >
           <Edit />
         </ActionButton>
         <ActionButton onClick={deleteFeature}>
