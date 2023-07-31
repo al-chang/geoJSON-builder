@@ -3,7 +3,11 @@ import { fromLonLat } from "ol/proj";
 import { TGeometry, TSearchResponse } from "../../types";
 import { useBuilderContext } from "../../contexts/Builder/useBuilderContext";
 import { useMapContext } from "../../contexts/Map/useMapContext";
-import { calculateZoomFromBoundingBox, geometryCenter } from "../../util";
+import {
+  calculateZoomFromBoundingBox,
+  geometryCenter,
+  geometryToFeature,
+} from "../../util";
 import styled from "styled-components";
 import { Plus, Show } from "styled-icons/boxicons-regular";
 import { getGeoJson } from "../../service/searchService";
@@ -95,8 +99,26 @@ const SearchResult: React.FC<SearchResultProps> = ({ result }) => {
         <button
           type="button"
           ref={addButton}
-          onClick={() => {
-            dispatchFeatureCollection({ type: "addFeature", payload: result });
+          onClick={async () => {
+            let geoJson: TGeometry;
+            try {
+              geoJson = (await getGeoJson(`${result.osm_id}`)).geometry;
+            } catch {
+              geoJson =
+                result.geojson ??
+                ({
+                  type: "Point",
+                  coordinates: [parseFloat(result.lon), parseFloat(result.lat)],
+                } as TGeometry);
+            }
+            dispatchFeatureCollection({
+              type: "addFeature",
+              payload: geometryToFeature(geoJson, {
+                name: result.display_name,
+                place_id: result.place_id,
+                osm_id: result.osm_id,
+              }),
+            });
             setPreviewGeoJson(null);
           }}
         >

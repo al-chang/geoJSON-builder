@@ -1,10 +1,5 @@
 import { createContext, useContext } from "react";
-import {
-  TFeature,
-  TFeatureCollection,
-  TProperties,
-  TSearchResponse,
-} from "../../types";
+import { TFeature, TFeatureCollection, TProperties } from "../../types";
 
 type TBuilderContext = {
   featureCollection: Readonly<TFeatureCollection>;
@@ -19,7 +14,7 @@ type TBuilderContext = {
 export const BuilderContext = createContext<TBuilderContext>(null!);
 
 type TSaveEdits = { type: "saveEdits"; payload: TFeature[] };
-type TAddFeature = { type: "addFeature"; payload: TSearchResponse };
+type TAddFeature = { type: "addFeature"; payload: TFeature };
 type TRemoveFeature = { type: "removeFeature"; payload: string };
 type TToggleFeatureVisibility = {
   type: "toggleFeatureVisibility";

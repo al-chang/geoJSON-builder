@@ -1,6 +1,5 @@
 import { PropsWithChildren, useReducer, useState } from "react";
 import { TFeatureCollection, metaSymbol } from "../../types";
-import { searchResponseToFeature } from "../../util";
 import { BuilderContext, FeatureCollectionActions } from "./useBuilderContext";
 
 const featureCollectionReducer = (
@@ -11,7 +10,7 @@ const featureCollectionReducer = (
     case "addFeature":
       return {
         ...state,
-        features: [...state.features, searchResponseToFeature(action.payload)],
+        features: [...state.features, action.payload],
       };
     case "removeFeature":
       return {
