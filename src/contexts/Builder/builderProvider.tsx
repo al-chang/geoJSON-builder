@@ -40,17 +40,11 @@ const featureCollectionReducer = (
     case "saveEdits":
       return {
         ...state,
-        features: state.features.map((f) => ({
-          type: "Feature",
-          geometry:
-            action.payload.find(
-              (feature) =>
-                feature.properties[metaSymbol].uuid ===
-                f.properties[metaSymbol].uuid
-            )?.geometry || f.geometry,
+        features: action.payload.map((feature) => ({
+          ...feature,
           properties: {
-            ...f.properties,
-            [metaSymbol]: { ...f.properties[metaSymbol], visible: true },
+            ...feature.properties,
+            [metaSymbol]: { uuid: crypto.randomUUID(), visible: true },
           },
         })),
       };
