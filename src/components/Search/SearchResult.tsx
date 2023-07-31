@@ -63,6 +63,20 @@ const SearchResult: React.FC<SearchResultProps> = ({ result }) => {
   const { setPreviewGeoJson, setCenter, setZoom } = useMapContext();
   const { dispatchFeatureCollection } = useBuilderContext();
 
+  const retrieveGeometry = async (): Promise<TGeometry> => {
+    try {
+      return (await getGeoJson(`${result.osm_id}`)).geometry;
+    } catch {
+      return (
+        result.geojson ??
+        ({
+          type: "Point",
+          coordinates: [parseFloat(result.lon), parseFloat(result.lat)],
+        } as TGeometry)
+      );
+    }
+  };
+
   return (
     <Container>
       <DisplayName>{result.display_name}</DisplayName>
@@ -71,18 +85,9 @@ const SearchResult: React.FC<SearchResultProps> = ({ result }) => {
           type="button"
           ref={previewButton}
           onClick={async () => {
-            let geoJson;
-            try {
-              geoJson = (await getGeoJson(`${result.osm_id}`)).geometry;
-            } catch {
-              geoJson =
-                result.geojson ??
-                ({
-                  type: "Point",
-                  coordinates: [parseFloat(result.lon), parseFloat(result.lat)],
-                } as TGeometry);
-            }
-            setPreviewGeoJson(geoJson);
+            const geometry = await retrieveGeometry();
+
+            setPreviewGeoJson(geometry);
             setZoom(
               calculateZoomFromBoundingBox({
                 minX: parseFloat(result.boundingbox[2]),
@@ -91,7 +96,7 @@ const SearchResult: React.FC<SearchResultProps> = ({ result }) => {
                 maxY: parseFloat(result.boundingbox[1]),
               })
             );
-            setCenter(fromLonLat(geometryCenter(geoJson)));
+            setCenter(fromLonLat(geometryCenter(geometry)));
           }}
         >
           <Show />
@@ -100,20 +105,11 @@ const SearchResult: React.FC<SearchResultProps> = ({ result }) => {
           type="button"
           ref={addButton}
           onClick={async () => {
-            let geoJson: TGeometry;
-            try {
-              geoJson = (await getGeoJson(`${result.osm_id}`)).geometry;
-            } catch {
-              geoJson =
-                result.geojson ??
-                ({
-                  type: "Point",
-                  coordinates: [parseFloat(result.lon), parseFloat(result.lat)],
-                } as TGeometry);
-            }
+            const geometry = await retrieveGeometry();
+
             dispatchFeatureCollection({
               type: "addFeature",
-              payload: geometryToFeature(geoJson, {
+              payload: geometryToFeature(geometry, {
                 name: result.display_name,
                 place_id: result.place_id,
                 osm_id: result.osm_id,
