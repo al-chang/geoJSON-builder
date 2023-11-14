@@ -1,3 +1,5 @@
+import { UUID } from "crypto";
+
 type TCoordinate = [number, number];
 
 type TPoint = {
@@ -40,15 +42,12 @@ export type TGeometry =
 
 export type TGeometryType = TGeometry["type"];
 
-export const metaSymbol = Symbol("meta");
-
 export type TMetaProperties = {
   visible: boolean;
-  uuid: string;
+  uuid: UUID;
 };
 
 export type TProperties = {
-  [metaSymbol]: TMetaProperties;
   [key: string]: string | number;
 };
 
@@ -56,6 +55,7 @@ export type TFeature = {
   geometry: TGeometry;
   type: "Feature";
   properties: TProperties;
+  meta: TMetaProperties;
 };
 
 export type TFeatureCollection = {

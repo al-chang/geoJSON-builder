@@ -1,26 +1,15 @@
-import OSM from "ol/source/OSM";
-import VectorSource from "ol/source/Vector";
-import { GeoJSON as GeoJSONFormat } from "ol/format";
+import { Style, Fill, Stroke } from "ol/style";
+import CircleStyle from "ol/style/Circle";
 import {
   TFeature,
-  TSearchResponse,
   TFeatureCollection,
   TGeometry,
-  metaSymbol,
+  TGeometryType,
 } from "./types";
 import { get } from "ol/proj";
+import VectorSource from "ol/source/Vector";
+import { GeoJSON } from "ol/format";
 import { Coordinate } from "ol/coordinate";
-
-export const osm = new OSM();
-
-export const vector = (geoJSON: TFeatureCollection | TFeature | TGeometry) => {
-  return new VectorSource({
-    features: new GeoJSONFormat().readFeatures(geoJSON, {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      featureProjection: get("EPSG:3857")!,
-    }),
-  });
-};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const debounce = <F extends (...args: any[]) => any>(
@@ -42,25 +31,89 @@ export const geometryToFeature = (
 ): TFeature => ({
   geometry: geometry,
   type: "Feature",
-  properties: {
-    ...properties,
-    [metaSymbol]: {
-      visible: true,
-      uuid: crypto.randomUUID(),
-    },
+  properties: properties ?? {},
+  meta: {
+    visible: true,
+    uuid: crypto.randomUUID(),
   },
 });
 
-export const dimensionsFromBoundingBox = (boundingBox: number[]) => {
-  const [minX, minY, maxX, maxY] = boundingBox;
-  return [Math.abs(maxX - minX), Math.abs(maxY - minY)];
+// Utility function for deter
+export const styleGeometry = (
+  geometryType: TGeometryType,
+  { red, green, blue } = { red: 0, green: 0, blue: 255 }
+): Style => {
+  switch (geometryType) {
+    case "Point":
+      return new Style({
+        image: new CircleStyle({
+          radius: 5,
+          fill: new Fill({ color: `rgba(${red}, ${green}, ${blue}, 0.1)` }),
+          stroke: new Stroke({
+            color: `rgb(${red}, ${green}, ${blue})`,
+            width: 1,
+          }),
+        }),
+      });
+    case "LineString":
+      return new Style({
+        stroke: new Stroke({
+          color: `rgb(${red}, ${green}, ${blue})`,
+          width: 1,
+        }),
+      });
+    case "Polygon":
+      return new Style({
+        fill: new Fill({ color: `rgba(${red}, ${green}, ${blue}, 0.1)` }),
+        stroke: new Stroke({
+          color: `rgb(${red}, ${green}, ${blue})`,
+          width: 1,
+        }),
+      });
+    case "MultiPoint":
+      return new Style({
+        image: new CircleStyle({
+          radius: 5,
+          fill: new Fill({ color: `rgba(${red}, ${green}, ${blue}, 0.1)` }),
+          stroke: new Stroke({
+            color: `rgb(${red}, ${green}, ${blue})`,
+            width: 1,
+          }),
+        }),
+      });
+    case "MultiLineString":
+      return new Style({
+        stroke: new Stroke({
+          color: `rgb(${red}, ${green}, ${blue})`,
+          width: 1,
+        }),
+      });
+    case "MultiPolygon":
+      return new Style({
+        fill: new Fill({ color: `rgba(${red}, ${green}, ${blue}, 0.1)` }),
+        stroke: new Stroke({
+          color: `rgb(${red}, ${green}, ${blue})`,
+          width: 1,
+        }),
+      });
+    default:
+      throw new Error(`Unsupported geometry type: ${geometryType}`);
+  }
 };
 
-export const areaFromBoundingBox = (boundingBox: number[]) => {
-  const [minX, minY, maxX, maxY] = boundingBox;
-  return Math.abs(maxX - minX) * Math.abs(maxY - minY);
+// Convert a feature to a vector to be rendered on the map
+export const featuresToVector = (
+  geoJSON: TFeatureCollection | TFeature | TGeometry
+) => {
+  return new VectorSource({
+    features: new GeoJSON().readFeatures(geoJSON, {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      featureProjection: get("EPSG:3857")!,
+    }),
+  });
 };
 
+// Returns the center of a geometry
 export const geometryCenter = (geometry: TGeometry): Coordinate => {
   switch (geometry.type) {
     case "Point":
@@ -119,6 +172,7 @@ export const geometryCenter = (geometry: TGeometry): Coordinate => {
   }
 };
 
+// Calculates the bounding box of a given geometry - bounding box is the smallest box that contains all points
 export const calculateBoundingBox = (
   geometry: TGeometry
 ): { minX: number; minY: number; maxX: number; maxY: number } => {
@@ -184,6 +238,7 @@ export const calculateBoundingBox = (
   }
 };
 
+// Returns a value to represent the desired zoom, given a bounding box
 export const calculateZoomFromBoundingBox = ({
   minX,
   minY,
@@ -198,5 +253,5 @@ export const calculateZoomFromBoundingBox = ({
   const diffX = Math.abs(maxX - minX);
   const diffY = Math.abs(maxY - minY);
   const diff = Math.max(diffX, diffY);
-  return Math.log2(360 / diff);
+  return Math.min(Math.log2(360 / diff), 20);
 };
