@@ -35,8 +35,8 @@ const Menu = () => {
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Portal>
-        <DropdownMenu.Content className="bg-white rounded py-2 px-4">
-          <DropdownMenu.Item className="text-blue-700 rounded py-2">
+        <DropdownMenu.Content className="bg-white dark:bg-gray-600 rounded py-2 px-4 border border-blue-700">
+          <DropdownMenu.Item className="text-blue-700 rounded py-2 dark:text-white">
             <button
               className="p-0 bg-transparent border-none w-full text-center"
               onClick={exportFeatures}
@@ -44,7 +44,7 @@ const Menu = () => {
               Export
             </button>
           </DropdownMenu.Item>
-          <DropdownMenu.Item className="text-blue-700 rounded py-2">
+          <DropdownMenu.Item className="text-blue-700 rounded py-2 dark:text-white">
             <button
               className="p-0 bg-transparent border-none w-full text-center"
               onClick={reset}

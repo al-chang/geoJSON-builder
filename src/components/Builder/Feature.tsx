@@ -19,7 +19,7 @@ const Feature: React.FC<FeatureProps> = ({ feature }) => {
   const { centerOnGeometry } = useMapStore();
 
   return (
-    <div className="border-solid border-blue-700 border-2 m-2 p-2 rounded bg-slate-900">
+    <div className="border-solid border-blue-700 border-2 m-2 p-2 rounded dark:bg-slate-900">
       <h3 className="pb-2">{feature.properties.name}</h3>
       <div className="flex justify-between">
         <div className="flex items-center">
@@ -29,7 +29,7 @@ const Feature: React.FC<FeatureProps> = ({ feature }) => {
             onCheckedChange={(val) => setVisibility(feature.meta.uuid, val)}
             defaultChecked={feature.meta.visible}
           >
-            <Switch.Thumb className="block w-[21px] h-[21px] bg-white rounded-full transition-transform duration-100 -translate-y-[3px] translate-x-0.5 will-change-transform data-[state=checked]:translate-x-[21px] group-hover:data-[state=unchecked]:translate-x-[6px] group-hover:data-[state=checked]:translate-x-[17px] " />
+            <Switch.Thumb className="block w-[21px] h-[21px] border-black border dark:border-none bg-white rounded-full transition-transform duration-100 -translate-y-[3px] translate-x-0.5 will-change-transform data-[state=checked]:translate-x-[21px] group-hover:data-[state=unchecked]:translate-x-[6px] group-hover:data-[state=checked]:translate-x-[17px] " />
           </Switch.Root>
           <label htmlFor={`${feature.meta.uuid}-visibility`} className="ml-2">
             {feature.meta.visible ? (
@@ -63,7 +63,7 @@ const Feature: React.FC<FeatureProps> = ({ feature }) => {
             aria-label={`Delete ${feature.properties.name}`}
           >
             <TrashIcon
-              className="transition-colors duration-200 hover:text-red-500 text-gray-300"
+              className="transition-colors duration-200 hover:text-red-500"
               height={20}
               width={20}
             />

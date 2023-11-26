@@ -76,7 +76,7 @@ const SearchBar = () => {
       <div className="relative">
         <div className="flex">
           <input
-            className="w-full p-2 mr-1"
+            className="w-full p-2 mr-1 border border-indigo-300 dark:border-none"
             {...getInputProps({
               type: "search",
               id: "search",
@@ -86,7 +86,10 @@ const SearchBar = () => {
           />
           <Menu />
         </div>
-        <ul {...getMenuProps()} className="absolute w-full bg-black z-50">
+        <ul
+          {...getMenuProps()}
+          className="absolute w-full bg-slate-200 dark:bg-black z-50"
+        >
           {isOpen &&
             (loading ? (
               // Credit to https://flowbite.com/docs/components/spinner/
@@ -117,7 +120,7 @@ const SearchBar = () => {
                 <li
                   key={result.osm_id}
                   className={`cursor-pointer m-1 rounded px-2 py-1 ${
-                    index === highlightedIndex && "bg-gray-600"
+                    index === highlightedIndex && "bg-gray-400 dark:bg-gray-600"
                   }`}
                   {...getItemProps({
                     item: result,
