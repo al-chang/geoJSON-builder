@@ -76,7 +76,7 @@ const SearchBar = () => {
       <div className="relative">
         <div className="flex">
           <input
-            className="w-full p-2 mr-1 border border-indigo-300 dark:border-none"
+            className="w-full p-2 mr-1 bg-slate-200 dark:bg-black"
             {...getInputProps({
               type: "search",
               id: "search",
@@ -120,7 +120,7 @@ const SearchBar = () => {
                 <li
                   key={result.osm_id}
                   className={`cursor-pointer m-1 rounded px-2 py-1 ${
-                    index === highlightedIndex && "bg-gray-400 dark:bg-gray-600"
+                    index === highlightedIndex && "bg-blue-200 dark:bg-gray-600"
                   }`}
                   {...getItemProps({
                     item: result,

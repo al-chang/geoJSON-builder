@@ -19,17 +19,17 @@ const Feature: React.FC<FeatureProps> = ({ feature }) => {
   const { centerOnGeometry } = useMapStore();
 
   return (
-    <div className="border-solid border-blue-700 border-2 m-2 p-2 rounded dark:bg-slate-900">
+    <div className="border-solid border-blue-700 border-2 m-2 p-2 rounded bg-slate-50 dark:bg-slate-900">
       <h3 className="pb-2">{feature.properties.name}</h3>
       <div className="flex justify-between">
         <div className="flex items-center">
           <Switch.Root
             id={`${feature.meta.uuid}-visibility`}
-            className="group w-[42px] h-[15px] bg-black rounded-full relative data-[state=checked]:bg-blue-700 outline-none p-0 border-none"
+            className="group w-[42px] h-[15px] bg-slate-300 dark:bg-slate-500 rounded-full data-[state=checked]:bg-blue-400 relative dark:data-[state=checked]:bg-blue-700 outline-none p-0 "
             onCheckedChange={(val) => setVisibility(feature.meta.uuid, val)}
             defaultChecked={feature.meta.visible}
           >
-            <Switch.Thumb className="block w-[21px] h-[21px] border-black border dark:border-none bg-white rounded-full transition-transform duration-100 -translate-y-[3px] translate-x-0.5 will-change-transform data-[state=checked]:translate-x-[21px] group-hover:data-[state=unchecked]:translate-x-[6px] group-hover:data-[state=checked]:translate-x-[17px] " />
+            <Switch.Thumb className="block w-[21px] h-[21px] bg-slate-500 dark:bg-white rounded-full transition-transform duration-100 -translate-y-[3px] translate-x-0.5 will-change-transform data-[state=checked]:translate-x-[21px] group-hover:data-[state=unchecked]:translate-x-[6px] group-hover:data-[state=checked]:translate-x-[17px] border-black border-1 border-solid" />
           </Switch.Root>
           <label htmlFor={`${feature.meta.uuid}-visibility`} className="ml-2">
             {feature.meta.visible ? (
